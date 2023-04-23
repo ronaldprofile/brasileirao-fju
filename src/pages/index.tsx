@@ -8,27 +8,33 @@ import { useState } from 'react'
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1)
-
   const [team, setTeam] = useState<string | null>(null)
 
-  const handleNextStepForm = () => setCurrentStep((prevState) => prevState + 1)
+  const steps = 4
+
+  const handleNextStepForm = () => {
+    if (currentStep < steps) {
+      setCurrentStep((prevState) => prevState + 1)
+    }
+  }
 
   const nextStepButtonDisabled = !team
+
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-[#121214]">
-      <div className="w-full max-w-xl">
+      <div className="w-full p-6 sm:max-w-xl sm:p-0">
         <div className="flex flex-col">
           <h1 className="text-white font-bold text-2xl leading-9">
             Bem vindo ao brasileirão da força jovem universal
           </h1>
 
-          <p className="text-[#A9A9B2] leading-6 tracking-wide">
+          <p className="text-[#A9A9B2] leading-6 sm:tracking-wide">
             Precisamos de algumas informações para criar seu time! Ah, você pode
             editar essas informações depois.
           </p>
         </div>
 
-        <FormSteps size={4} currentStep={currentStep} className="my-6" />
+        <FormSteps size={steps} currentStep={currentStep} className="my-6" />
 
         <div>
           <FormBox>
