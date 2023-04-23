@@ -7,6 +7,19 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'appereance-animation': {
+          '0%': {
+            opacity: 0,
+            // visibility: 'hidden',
+          },
+          '100%': {
+            opacity: 1,
+            // visibility: 'visible',
+          },
+        },
+      },
+
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
