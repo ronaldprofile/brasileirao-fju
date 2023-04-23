@@ -5,7 +5,7 @@ import { StepPlayers } from './Players'
 import { Heading } from './Heading'
 
 export function Steps() {
-  const [currentStep, setCurrentStep] = useState(2)
+  const [currentStep, setCurrentStep] = useState(1)
 
   const steps = 4
 
