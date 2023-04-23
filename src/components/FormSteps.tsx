@@ -17,7 +17,13 @@ export function FormSteps({
         Passo {currentStep} de {size}
       </label>
 
-      <div className={`grid grid-cols-${size} gap-2`}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
+          gap: 4,
+        }}
+      >
         {Array.from({ length: size }, (_, index) => {
           const position = index + 1
 
