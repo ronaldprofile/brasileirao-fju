@@ -30,13 +30,18 @@ export function Classification() {
         </thead>
 
         <tbody className="divide-y divide-[#323238]">
-          {teams.map((team) => {
+          {teams.map((team, index) => {
+            const position = index + 1
+
             return (
               <tr
                 key={team}
                 className="h-10 hover:bg-[#323238] transition-colors"
               >
-                <td className="pl-4 text-sm text-[#A9A9B2]">{team}</td>
+                <td className="pl-4 text-sm text-[#A9A9B2]">
+                  <span>{position}</span>
+                  <span className="ml-2">{team}</span>
+                </td>
                 <td className="text-sm text-center text-[#A9A9B2]">0</td>
                 <td className="text-sm text-center text-[#A9A9B2]">0</td>
                 <td className="text-sm text-center text-[#A9A9B2]">0</td>
