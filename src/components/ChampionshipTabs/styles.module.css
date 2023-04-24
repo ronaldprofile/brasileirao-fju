@@ -1,6 +1,6 @@
 .tab {
   @apply h-full flex items-center justify-center text-white text-xs uppercase 
-  cursor-pointer hover:enabled:bg-[#323238] transition-colors
+  cursor-pointer hover:bg-[#323238] transition-colors
 }
 
 .tab-active {

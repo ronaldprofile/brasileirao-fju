@@ -15,10 +15,9 @@ export function ChampionshipTabs({
     <nav className="w-full max-w-3xl h-12 mx-auto">
       <ul className="h-full grid grid-cols-4">
         <li
-          // onClick={() => onChangeTabActive('matches')}
+          onClick={() => onChangeTabActive('matches')}
           className={cx(
             styles.tab,
-            styles['tab-inactive'],
             tabActive === 'matches' && `${styles['tab-active']}`,
           )}
         >
