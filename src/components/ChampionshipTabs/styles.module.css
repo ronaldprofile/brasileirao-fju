@@ -1,0 +1,12 @@
+.tab {
+  @apply h-full flex items-center justify-center text-white text-xs uppercase 
+  cursor-pointer hover:enabled:bg-[#323238] transition-colors
+}
+
+.tab-active {
+  @apply border-b-2 border-b-white
+}
+
+.tab-inactive {
+  @apply cursor-not-allowed opacity-50
+}
