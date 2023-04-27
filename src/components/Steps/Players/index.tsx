@@ -6,7 +6,8 @@ import { Plus } from '@phosphor-icons/react'
 import { ButtonNextStep } from '../ButtonNextStep'
 import { ListPlayers } from './ListPlayers'
 
-import { NewPlayerModal, Player } from '@/components/NewPlayerModal'
+import { NewPlayerModal } from '@/components/NewPlayerModal'
+import { Player } from '@/@types/player'
 
 interface StepPlayersProps {
   handleNextStepForm: () => void

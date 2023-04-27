@@ -8,13 +8,7 @@ import {
 } from '../Modal'
 import { Input } from '../Input'
 import { Button } from '../Button'
-
-export interface Player {
-  id: number
-  name: string
-  surname: string
-  shirt: string
-}
+import { Player } from '@/@types/player'
 
 interface NewPlayerModalProps extends ModalProps {
   listPlayers: Player[]

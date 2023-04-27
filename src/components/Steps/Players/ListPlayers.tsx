@@ -1,4 +1,4 @@
-import { Player } from '.'
+import { Player } from '@/@types/player'
 
 interface ListPlayersProps {
   players: Player[]
