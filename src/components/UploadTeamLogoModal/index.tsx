@@ -4,8 +4,8 @@ import cx from 'clsx'
 import {
   Modal as ModalComponent,
   ModalWrapper,
-  ModalTrigger,
   ModalTitle,
+  ModalProps,
 } from '../Modal'
 
 import Image from 'next/image'
@@ -16,10 +16,9 @@ import imageFortaleza from '../../assets/images/fortaleza.svg'
 import imageCeara from '../../assets/images/ceara.svg'
 
 import { Button } from '../Button'
+import { useRouter } from 'next/router'
 
-interface UploadTeamLogoModalProps {
-  children: React.ReactNode
-}
+interface UploadTeamLogoModalProps extends ModalProps {}
 
 interface Team {
   id: number
@@ -50,19 +49,26 @@ const teamsOptions = [
   },
 ]
 
-export function UploadTeamLogoModal({ children }: UploadTeamLogoModalProps) {
+export function UploadTeamLogoModal({
+  open,
+  onOpenChange,
+}: UploadTeamLogoModalProps) {
   const [teamLogoSelected, setTeamLogoSelected] = useState<Team | null>(null)
+
+  const router = useRouter()
 
   function handleSelectTeamLogo(team: Team) {
     setTeamLogoSelected(team)
   }
 
+  function handleSaveTeamLogo() {
+    router.push('/success')
+  }
+
   const buttonDisabled = !teamLogoSelected
 
   return (
-    <ModalComponent>
-      <ModalTrigger>{children}</ModalTrigger>
-
+    <ModalComponent open={open} onOpenChange={onOpenChange}>
       <ModalWrapper>
         <ModalTitle>Logo do time</ModalTitle>
 
@@ -109,7 +115,9 @@ export function UploadTeamLogoModal({ children }: UploadTeamLogoModalProps) {
               </span>
             </label> */}
 
-            <Button disabled={buttonDisabled}>Ok, escolhi o escudo</Button>
+            <Button disabled={buttonDisabled} onClick={handleSaveTeamLogo}>
+              Ok, escolhi o escudo
+            </Button>
           </div>
         </div>
       </ModalWrapper>
