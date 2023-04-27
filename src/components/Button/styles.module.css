@@ -1,0 +1,7 @@
+.button {
+  @apply h-12 px-3 bg-[#00875F] font-medium text-sm text-white rounded-md focus:outline-none disabled:bg-[#A9A9B2] disabled:cursor-not-allowed  hover:enabled:brightness-95 transition-colors
+}
+
+.button-outlined {
+  @apply bg-transparent border-2 border-[#00875F] hover:bg-[#00875f]
+}

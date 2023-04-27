@@ -8,4 +8,9 @@ export const titles = {
     title: 'Agora adicione jogadores ao seu time',
     description: 'Você pode adicionar 5 ou mais jogadores',
   },
+  3: {
+    title: 'Agora vamos adicionar o escudo do seu time',
+    description:
+      'Você pode escolher uma imagem da sua galeria ou um escudo disponivel',
+  },
 }

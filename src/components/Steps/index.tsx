@@ -3,11 +3,12 @@ import { FormSteps } from '../FormSteps'
 import { StepTeam } from './Team'
 import { StepPlayers } from './Players'
 import { Heading } from './Heading'
+import { StepTeamLogo } from './TeamLogo'
 
 export function Steps() {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(3)
 
-  const steps = 4
+  const steps = 3
 
   const handleNextStepForm = () => {
     if (currentStep < steps) {
@@ -28,6 +29,9 @@ export function Steps() {
 
       case 2:
         return <StepPlayers handleNextStepForm={handleNextStepForm} />
+
+      case 3:
+        return <StepTeamLogo />
     }
   }
 
