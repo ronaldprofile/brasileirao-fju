@@ -6,10 +6,7 @@ interface LoadingProps {
   onAnimationEnd?: () => void
 }
 
-export function Loading({
-  progressColor = '#00875F',
-  onAnimationEnd,
-}: LoadingProps) {
+export function Loading({ onAnimationEnd }: LoadingProps) {
   const [springs] = useSpring(() => ({
     from: { width: '0%' },
     to: { width: '100%' },
@@ -20,7 +17,7 @@ export function Loading({
   return (
     <animated.div className="w-64 bg-[#323238] rounded-full h-2.5">
       <animated.div
-        className={cx('h-2.5 rounded-full', `bg-[${progressColor}]`)}
+        className={cx('h-2.5 rounded-full bg-[#00875F]')}
         style={{
           ...springs,
         }}
