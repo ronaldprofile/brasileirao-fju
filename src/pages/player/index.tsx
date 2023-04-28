@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { z } from 'zod'
 
 import { Button } from '@/components/Button'
 import { FormBox } from '@/components/FormBox'
@@ -22,7 +21,7 @@ interface Avatar {
 }
 
 export default function Player() {
-  const [avatarPreview, setAvatarPreview] = useState<Avatar | null>()
+  const [avatarPreview] = useState<Avatar | null>()
 
   const { register, handleSubmit, formState } = useForm<createPlayerFormData>({
     resolver: zodResolver(createPlayerFormSchema),
