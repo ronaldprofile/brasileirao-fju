@@ -1,0 +1,4 @@
+.input {
+  @apply h-12 px-3 bg-[#121214] text-sm  text-white placeholder:text-[#7C7C8A] rounded-md 
+  outline-none border-2 border-transparent transition-colors
+}
