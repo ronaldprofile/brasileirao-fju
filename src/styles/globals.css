@@ -9,3 +9,19 @@ body {
 #__next {
   height: 100vh;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101010;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #504f51;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #323238;
+}
