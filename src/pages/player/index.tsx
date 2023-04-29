@@ -127,7 +127,7 @@ export default function Player() {
 
                 {errors.avatar && (
                   <span className="text-xs text-red-400">
-                    {errors.avatar.message}
+                    {errors.avatar.message?.toString()}
                   </span>
                 )}
               </div>
