@@ -1,9 +1,10 @@
 import { useState } from 'react'
-
 import { Button } from '@/components/Button'
 import { FormBox } from '@/components/FormBox'
 import { Input } from '@/components/Input'
 import { useForm } from 'react-hook-form'
+
+import { CircleNotch, FileImage } from '@phosphor-icons/react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -12,28 +13,33 @@ import {
   createPlayerFormDataInputs,
 } from '@/schemas/player'
 
-import { FileImage } from '@phosphor-icons/react'
 import { PlayerPhotoPreview } from '@/components/PlayerPhotoPreview'
 
-interface Avatar {
-  name: string
-  size: number
-}
-
 export default function Player() {
-  const [avatarPreview] = useState<Avatar | null>()
+  const [delay, setDelay] = useState(false)
 
-  const { register, handleSubmit, formState } = useForm<createPlayerFormData>({
-    resolver: zodResolver(createPlayerFormSchema),
-  })
-
-  // const watchUploadFile = watch('avatar')
+  const { register, watch, resetField, handleSubmit, formState } =
+    useForm<createPlayerFormData>({
+      resolver: zodResolver(createPlayerFormSchema),
+    })
 
   const { errors } = formState
 
   async function handleCreatePlayer(data: createPlayerFormDataInputs) {
-    console.log(data)
+    setDelay(true)
+
+    setTimeout(() => {
+      console.log('Enviando dados do formulário:', data)
+      setDelay(false)
+    }, 2000)
   }
+
+  function handleRemovePhotoSelected() {
+    resetField('avatar')
+  }
+
+  const watchUploadFile: FileList = watch('avatar')
+  const havePhotoSelected = watchUploadFile?.length > 0
 
   return (
     <div className="h-full w-full">
@@ -90,8 +96,11 @@ export default function Player() {
               </div>
 
               <div className="mb-4 flex flex-col gap-2">
-                {avatarPreview ? (
-                  <PlayerPhotoPreview avatar={avatarPreview} />
+                {havePhotoSelected ? (
+                  <PlayerPhotoPreview
+                    files={watchUploadFile}
+                    onRemovePhotoSelected={handleRemovePhotoSelected}
+                  />
                 ) : (
                   <>
                     <label htmlFor="avatar">
@@ -110,20 +119,29 @@ export default function Player() {
                       type="file"
                       accept="image/*"
                       id="avatar"
+                      {...register('avatar')}
                       className="opacity-0 invisible absolute inset-0"
                     />
                   </>
                 )}
 
-                {/* {errors.avatar && (
+                {errors.avatar && (
                   <span className="text-xs text-red-400">
                     {errors.avatar.message}
                   </span>
-                )} */}
+                )}
               </div>
 
-              <Button type="submit" className="w-full font-bold">
-                Salvar
+              <Button
+                type="submit"
+                disabled={delay}
+                className="w-full font-bold flex justify-center items-center"
+              >
+                {delay ? (
+                  <CircleNotch size={20} className="animate-spin" />
+                ) : (
+                  'Salvar'
+                )}
               </Button>
             </form>
           </FormBox>
