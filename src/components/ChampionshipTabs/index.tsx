@@ -43,10 +43,9 @@ export function ChampionshipTabs({
           Estastísticas
         </li>
         <li
-          // onClick={() => onChangeTabActive('players')}
+          onClick={() => onChangeTabActive('players')}
           className={cx(
             styles.tab,
-            styles['tab-inactive'],
             tabActive === 'players' && `${styles['tab-active']}`,
           )}
         >
