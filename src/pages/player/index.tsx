@@ -26,6 +26,8 @@ export default function Player() {
   const { errors, isSubmitting } = formState
 
   async function handleCreatePlayer(data: createPlayerFormDataInputs) {
+    console.log(process.env.API_URL)
+
     const createPlayer = {
       name: data.name,
       nickname: data.surname,
