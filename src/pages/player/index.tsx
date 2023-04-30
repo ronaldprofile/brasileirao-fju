@@ -1,8 +1,10 @@
-import { useState } from 'react'
 import { Button } from '@/components/Button'
 import { FormBox } from '@/components/FormBox'
 import { Input } from '@/components/Input'
 import { useForm } from 'react-hook-form'
+import { api } from '@/lib/axios'
+
+import { toast } from 'react-toastify'
 
 import { CircleNotch, FileImage } from '@phosphor-icons/react'
 
@@ -16,26 +18,38 @@ import {
 import { PlayerPhotoPreview } from '@/components/PlayerPhotoPreview'
 
 export default function Player() {
-  const [delay, setDelay] = useState(false)
-
-  const { register, watch, resetField, handleSubmit, formState } =
+  const { register, watch, reset, resetField, handleSubmit, formState } =
     useForm<createPlayerFormData>({
       resolver: zodResolver(createPlayerFormSchema),
     })
 
-  const { errors } = formState
+  const { errors, isSubmitting } = formState
 
   async function handleCreatePlayer(data: createPlayerFormDataInputs) {
-    setDelay(true)
+    const createPlayer = {
+      name: data.name,
+      nickname: data.surname,
+      shirtNumber: data.shirt,
+      avatar: data.avatar,
+    }
 
-    setTimeout(() => {
-      console.log('Enviando dados do formulário:', data)
-      setDelay(false)
-    }, 2000)
+    await api.post('/players/new', createPlayer, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    toast.success('Jogador criado')
+
+    clearFieldsForm()
   }
 
   function handleRemovePhotoSelected() {
     resetField('avatar')
+  }
+
+  function clearFieldsForm() {
+    reset()
   }
 
   const watchUploadFile: FileList = watch('avatar')
@@ -48,6 +62,7 @@ export default function Player() {
           <FormBox>
             <form
               onSubmit={handleSubmit(handleCreatePlayer)}
+              encType="multipart/form-data"
               className="w-full mt-8"
             >
               <div className="mb-4 flex flex-col gap-2">
@@ -126,7 +141,7 @@ export default function Player() {
                 )}
 
                 {errors.avatar && (
-                  <span className="text-xs text-red-400">
+                  <span className="text-xs text-[#D92D20]">
                     {errors.avatar.message?.toString()}
                   </span>
                 )}
@@ -134,10 +149,10 @@ export default function Player() {
 
               <Button
                 type="submit"
-                disabled={delay}
+                disabled={isSubmitting}
                 className="w-full font-bold flex justify-center items-center"
               >
-                {delay ? (
+                {isSubmitting ? (
                   <CircleNotch size={20} className="animate-spin" />
                 ) : (
                   'Salvar'
