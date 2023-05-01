@@ -14,7 +14,7 @@ import {
 } from '@/schemas/team'
 
 export function Steps() {
-  const [currentStep, setCurrentStep] = useState(3)
+  const [currentStep, setCurrentStep] = useState(1)
 
   const createTeamForm = useForm<createTeamFormData>({
     resolver: zodResolver(createTeamFormSchema),
