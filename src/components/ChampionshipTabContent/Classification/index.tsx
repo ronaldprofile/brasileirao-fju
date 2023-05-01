@@ -13,6 +13,8 @@ export function Classification() {
   const [teams, setTeams] = useState<Team[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
+  const teamsIsEmpty = teams.length === 0
+
   useEffect(() => {
     async function getTeams() {
       setIsLoading(true)
@@ -35,11 +37,13 @@ export function Classification() {
       </div>
 
       <div className="mt-2 bg-[#202024]">
-        {isLoading ? (
+        {isLoading && (
           <div className="p-2 text-white flex items-center justify-center">
             <CircleNotch size={24} className="animate-spin" />
           </div>
-        ) : (
+        )}
+
+        {!isLoading && !teamsIsEmpty && (
           <table className="w-full mt-2 bg-[#202024]">
             <thead className="border-b border-b-[#323238]">
               <tr className="h-8">
