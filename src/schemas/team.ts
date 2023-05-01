@@ -10,9 +10,13 @@ const ACCEPTED_IMAGE_TYPES = [
 
 export const createTeamFormSchema = z.object({
   name: z.string().nonempty('Nome do time é obrigatório'),
-  // playersIds:
+  playersIds: z
+    .array(z.string(), {
+      invalid_type_error: 'Minimo 5 jogadores',
+    })
+    .min(1, 'Minimo 5 jogadores')
+    .max(10, 'Máximo 5 jogadores'),
   shield: z
-    // .instanceof(FileList)
     .any()
     .refine((files) => !!files.item(0), 'A logo do time é obrigatória')
     .refine(

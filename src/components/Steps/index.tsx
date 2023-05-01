@@ -12,18 +12,40 @@ import {
   createTeamFormDataInputs,
   createTeamFormSchema,
 } from '@/schemas/team'
+import { api } from '@/lib/axios'
+import { toast } from 'react-toastify'
 
 export function Steps() {
   const [currentStep, setCurrentStep] = useState(1)
 
   const createTeamForm = useForm<createTeamFormData>({
     resolver: zodResolver(createTeamFormSchema),
+    defaultValues: {
+      playersIds: [],
+    },
   })
 
   const { handleSubmit } = createTeamForm
 
   async function handleCreateTeam(data: createTeamFormDataInputs) {
-    console.log(data)
+    const createTeam = {
+      name: data.name,
+      shield: data.shield,
+      acronym: 'LIV',
+      playersIds: data.playersIds,
+    }
+
+    try {
+      const res = await api.post('/teams/new', createTeam, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      toast.success(res.data.message)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const steps = 3
@@ -82,7 +104,10 @@ export function Steps() {
         <FormSteps size={steps} currentStep={currentStep} className="my-6" />
 
         <FormProvider {...createTeamForm}>
-          <form onSubmit={handleSubmit(handleCreateTeam)}>
+          <form
+            onSubmit={handleSubmit(handleCreateTeam)}
+            encType="multipart/form-data"
+          >
             {renderStepForm(currentStep)}
           </form>
         </FormProvider>
