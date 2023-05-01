@@ -1,72 +1,51 @@
-import { useState } from 'react'
-import { Button } from '@/components/Button'
+// import { useState } from 'react'
 import { FormBox } from '@/components/FormBox'
-import { Plus } from '@phosphor-icons/react'
+import { MagnifyingGlass } from '@phosphor-icons/react'
 
 import { ButtonNextStep } from '../ButtonNextStep'
-import { ListPlayers } from './ListPlayers'
-
-import { NewPlayerModal } from '@/components/NewPlayerModal'
-import { Player } from '@/@types/player'
+import { Input } from '@/components/Input'
 
 interface StepPlayersProps {
   handleNextStepForm: () => void
 }
 
 export function StepPlayers({ handleNextStepForm }: StepPlayersProps) {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [players, setPlayers] = useState<Player[]>([])
+  // const [players, setPlayers] = useState([])
 
-  function handleSavePlayer(newPlayer: Player) {
-    setPlayers((prevState) => [...prevState, newPlayer])
+  // async function handleSearchPlayer() {}
 
-    closeModal()
-  }
-
-  function openModal() {
-    setModalOpen(true)
-  }
-
-  function closeModal() {
-    setModalOpen(false)
-  }
-
-  const nextStepButtonDisabled = players.length < 5
+  // const nextStepButtonDisabled = players.length === 0
 
   return (
-    <>
-      <FormBox>
-        <div className="p-6 mb-4 border border-[#323228] rounded-md">
-          <div className="flex justify-between items-center ">
-            <strong className="text-[#E1E1E6] font-medium">
-              Jogadores {players.length} de 5
-            </strong>
+    <FormBox>
+      <div className="p-6 mb-4 border border-[#323228] rounded-md">
+        <div className="flex justify-between items-center">
+          <strong className="text-[#E1E1E6] font-medium">
+            Jogadores 0 de 5
+          </strong>
 
-            <Button
-              onClick={openModal}
-              outlined
-              className="flex justify-center items-center gap-2"
-            >
-              Adicionar
-              <Plus size={18} color="#fff" className="hidden sm:block" />
-            </Button>
-          </div>
-
-          {players.length > 0 && <ListPlayers players={players} />}
+          {/* <Button outlined className="flex justify-center items-center gap-2">
+            Adicionar
+            <Plus size={18} color="#fff" className="hidden sm:block" />
+          </Button> */}
         </div>
 
-        <ButtonNextStep
-          onNextStep={handleNextStepForm}
-          disabled={nextStepButtonDisabled}
-        />
-      </FormBox>
+        <div className="mt-3 flex items-center gap-3">
+          <Input placeholder="Busque por um jogador" className="w-full" />
 
-      <NewPlayerModal
-        open={modalOpen}
-        onOpenChange={closeModal}
-        listPlayers={players}
-        onAddPlayer={handleSavePlayer}
+          <button className="h-12 w-14 group hover:bg-[#00875F] border border-[#00875F] focus:outline-none flex items-center justify-center rounded-md transition-colors">
+            <MagnifyingGlass
+              size={20}
+              className="text-[#00875F] group-hover:text-white"
+            />
+          </button>
+        </div>
+      </div>
+
+      <ButtonNextStep
+        onNextStep={handleNextStepForm}
+        // disabled={nextStepButtonDisabled}
       />
-    </>
+    </FormBox>
   )
 }

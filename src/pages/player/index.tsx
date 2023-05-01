@@ -15,7 +15,7 @@ import {
   createPlayerFormDataInputs,
 } from '@/schemas/player'
 
-import { PlayerPhotoPreview } from '@/components/PlayerPhotoPreview'
+import { ViewPhotoPreview } from '@/components/ViewPhotoPreview'
 
 export default function Player() {
   const { register, watch, reset, resetField, handleSubmit, formState } =
@@ -117,7 +117,7 @@ export default function Player() {
 
               <div className="mb-4 flex flex-col gap-2">
                 {havePhotoSelected ? (
-                  <PlayerPhotoPreview
+                  <ViewPhotoPreview
                     files={watchUploadFile}
                     onRemovePhotoSelected={handleRemovePhotoSelected}
                   />

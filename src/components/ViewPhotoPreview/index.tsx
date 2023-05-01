@@ -3,18 +3,18 @@ import { Modal as ModalComponent, ModalWrapper } from '../Modal'
 
 import { Eye, Image as ImageIcon, Trash } from '@phosphor-icons/react'
 
-interface PlayerPhotoPreviewProps {
+interface ViewPhotoPreviewProps {
   onRemovePhotoSelected: () => void
 
   files: FileList
 }
 
-export function PlayerPhotoPreview({
+export function ViewPhotoPreview({
   files,
   onRemovePhotoSelected,
-}: PlayerPhotoPreviewProps) {
+}: ViewPhotoPreviewProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const [imageProfilePreview, setImageProfilePreview] = useState('')
+  const [imagePhotoPreview, setImagePhotoPreview] = useState('')
 
   function handleViewImage() {
     handleGenerateImagePreview()
@@ -36,7 +36,7 @@ export function PlayerPhotoPreview({
 
       const imagePreviewURL = URL.createObjectURL(file)
 
-      setImageProfilePreview(imagePreviewURL)
+      setImagePhotoPreview(imagePreviewURL)
     }
   }
 
@@ -82,7 +82,7 @@ export function PlayerPhotoPreview({
       <ModalComponent open={modalOpen} onOpenChange={closeModal}>
         <ModalWrapper>
           <div className="flex justify-center items-center">
-            <img src={imageProfilePreview} alt="" className="w-40 h-40" />
+            <img src={imagePhotoPreview} alt="" className="w-40 h-40" />
           </div>
         </ModalWrapper>
       </ModalComponent>
