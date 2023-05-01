@@ -13,7 +13,7 @@ export function StepTeamLogo() {
   const watchUploadFile: FileList = watch('shield', null)
   const havePhotoSelected = watchUploadFile?.length > 0
 
-  const buttonDisabled = isSubmitting
+  const buttonDisabled = !havePhotoSelected || isSubmitting
 
   return (
     <div>
