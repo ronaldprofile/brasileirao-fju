@@ -164,7 +164,7 @@ export function StepPlayers({ handleNextStepForm }: StepPlayersProps) {
                   <img
                     src={player.avatar}
                     alt={player.name}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-full"
                   />
 
                   <span className="text-[#a9a9b2] text-sm">{player.name}</span>

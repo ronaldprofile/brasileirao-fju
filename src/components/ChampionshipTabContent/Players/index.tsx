@@ -22,6 +22,8 @@ export function Players() {
   const [players, setPlayers] = useState<Player[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
+  const playersIsEmpty = players.length === 0
+
   useEffect(() => {
     async function getPlayers() {
       setIsLoading(true)
@@ -43,20 +45,31 @@ export function Players() {
         'flex justify-center items-center': isLoading,
       })}
     >
-      {isLoading ? (
+      {isLoading && (
         <div className="p-2  text-white">
           <CircleNotch size={24} className="animate-spin" />
         </div>
-      ) : (
+      )}
+
+      {!isLoading && !playersIsEmpty && (
         <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 px-2 pt-2 pb-10">
           {players.map((player) => {
+            const team = player.team
+
+            const words = team ? team.name.split(' ') : []
+            const formattedTeamName =
+              words.length === 2 ? words[1] : team ? team.name : 'Sem clube'
+
+            const teamName = formattedTeamName
+            const teamShield = player.team?.shield
+
             return (
               <div
                 key={player.id}
-                className="flex flex-col border border-[#323238] rounded-md"
+                className="flex flex-col border border-[#323238] rounded-md cursor-pointer group"
               >
                 <img
-                  className="w-full rounded-t h-[100px] object-cover"
+                  className="w-full rounded-t h-[100px] object-cover group-hover:scale-105 transition-transform"
                   src={player.avatar}
                   alt={player.name}
                 />
@@ -67,17 +80,17 @@ export function Players() {
                   </span>
 
                   <span className="flex items-center gap-2 text-xs">
-                    {player.team?.shield ? (
+                    {teamShield ? (
                       <img
-                        src={player.team.shield}
-                        alt={player.team.name}
+                        src={teamShield}
+                        alt={teamName}
                         className="w-6 h-6"
                       />
                     ) : (
                       <Shield size={16} />
                     )}
 
-                    {player.team?.name ?? 'Sem clube'}
+                    {teamName}
                   </span>
                 </div>
               </div>

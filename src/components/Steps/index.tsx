@@ -25,7 +25,7 @@ export function Steps() {
     },
   })
 
-  const { handleSubmit } = createTeamForm
+  const { handleSubmit, reset } = createTeamForm
 
   async function handleCreateTeam(data: createTeamFormDataInputs) {
     const createTeam = {
@@ -43,6 +43,9 @@ export function Steps() {
       })
 
       toast.success(res.data.message)
+      reset()
+
+      setCurrentStep(1)
     } catch (error) {
       console.log(error)
     }

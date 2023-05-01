@@ -82,7 +82,11 @@ export function ViewPhotoPreview({
       <ModalComponent open={modalOpen} onOpenChange={closeModal}>
         <ModalWrapper>
           <div className="flex justify-center items-center">
-            <img src={imagePhotoPreview} alt="" className="w-40 h-40" />
+            <img
+              src={imagePhotoPreview}
+              alt=""
+              className="w-40 h-40 object-cover"
+            />
           </div>
         </ModalWrapper>
       </ModalComponent>
