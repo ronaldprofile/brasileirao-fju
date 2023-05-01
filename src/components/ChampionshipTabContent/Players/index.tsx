@@ -3,12 +3,19 @@ import { api } from '@/lib/axios'
 import { CircleNotch, Shield } from '@phosphor-icons/react'
 import cx from 'clsx'
 
+interface Team {
+  name: string
+  shield: string
+}
+
 interface Player {
   id: string
   name: string
   nickname: string
   shirtNumber: string
   avatar: string
+
+  team: Team | null
 }
 
 export function Players() {
@@ -60,8 +67,17 @@ export function Players() {
                   </span>
 
                   <span className="flex items-center gap-2 text-xs">
-                    <Shield size={16} />
-                    FJU
+                    {player.team?.shield ? (
+                      <img
+                        src={player.team.shield}
+                        alt={player.team.name}
+                        className="w-6 h-6"
+                      />
+                    ) : (
+                      <Shield size={16} />
+                    )}
+
+                    {player.team?.name ?? 'Sem clube'}
                   </span>
                 </div>
               </div>
