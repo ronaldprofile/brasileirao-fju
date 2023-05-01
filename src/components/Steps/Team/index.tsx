@@ -1,17 +1,20 @@
-import { useState } from 'react'
-
 import { FormBox } from '@/components/FormBox'
 import { Input } from '@/components/Input'
 import { ButtonNextStep } from '../ButtonNextStep'
+import { useFormContext } from 'react-hook-form'
+import { createTeamFormData } from '@/schemas/team'
 
 interface StepTeamProps {
   handleNextStepForm: () => void
 }
 
 export function StepTeam({ handleNextStepForm }: StepTeamProps) {
-  const [team, setTeam] = useState<string | null>(null)
+  const { register, formState, watch } = useFormContext<createTeamFormData>()
 
-  const nextStepButtonDisabled = !team
+  const { errors } = formState
+
+  const team = watch('name', '')
+  const nextStepButtonDisabled = team.length === 0
 
   return (
     <div>
@@ -24,9 +27,10 @@ export function StepTeam({ handleNextStepForm }: StepTeamProps) {
           <Input
             type="text"
             id="team"
-            onChange={(e) => setTeam(e.target.value)}
             className="w-full"
             placeholder="Barcelona"
+            {...register('name')}
+            error={errors.name?.message}
           />
         </div>
 

@@ -1,28 +1,29 @@
-import { useState } from 'react'
-import { Button } from '@/components/Button'
 import { FormBox } from '@/components/FormBox'
-import { UploadTeamLogoModal } from '@/components/UploadTeamLogoModal'
+import { AreaUploadFile } from '@/components/AreaUploadFile'
+import { Button } from '@/components/Button'
+import { useFormContext } from 'react-hook-form'
+import { createTeamFormData } from '@/schemas/team'
 
 export function StepTeamLogo() {
-  const [modalOpen, setModalOpen] = useState(false)
+  const {
+    watch,
+    formState: { isSubmitting },
+  } = useFormContext<createTeamFormData>()
 
-  function openModal() {
-    setModalOpen(true)
-  }
+  const watchUploadFile: FileList = watch('shield', null)
+  const havePhotoSelected = watchUploadFile?.length > 0
 
-  function closeModal() {
-    setModalOpen(false)
-  }
+  const buttonDisabled = !havePhotoSelected || isSubmitting
 
   return (
     <div>
       <FormBox>
-        <Button outlined onClick={openModal}>
-          Escolher escudo
+        <AreaUploadFile label="shield" title="Logo do time" />
+
+        <Button type="submit" className="w-full mt-4" disabled={buttonDisabled}>
+          Salvar
         </Button>
       </FormBox>
-
-      <UploadTeamLogoModal open={modalOpen} onOpenChange={closeModal} />
     </div>
   )
 }
