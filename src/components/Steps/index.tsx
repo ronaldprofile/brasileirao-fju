@@ -31,7 +31,7 @@ export function Steps() {
     const createTeam = {
       name: data.name,
       shield: data.shield,
-      acronym: 'LIV',
+      acronym: '',
       playersIds: data.playersIds,
     }
 
