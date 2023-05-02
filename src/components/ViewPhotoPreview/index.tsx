@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Modal as ModalComponent, ModalWrapper } from '../Modal'
 
 import { Eye, Image as ImageIcon, Trash } from '@phosphor-icons/react'
+import { formatFileNameToShort } from '@/utils/format-file-name'
 
 interface ViewPhotoPreviewProps {
   onRemovePhotoSelected: () => void
@@ -42,6 +43,7 @@ export function ViewPhotoPreview({
 
   const file = files[0]
 
+  const fileName = formatFileNameToShort(file.name)
   const fileSizeKB = Number(file.size / 1024).toFixed(2) + ' KB'
 
   return (
@@ -52,9 +54,7 @@ export function ViewPhotoPreview({
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-[#7c7c7a]">
-            {file.name}
-          </span>
+          <span className="text-sm font-medium text-[#7c7c7a]">{fileName}</span>
           <span className="text-sm text-[#7c7c7a]">{fileSizeKB}</span>
         </div>
       </div>
