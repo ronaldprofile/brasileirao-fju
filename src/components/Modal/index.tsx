@@ -7,7 +7,7 @@ export type ModalProps = React.ComponentProps<typeof DialogPrimitive.Root> & {}
 export function Modal({ children, ...props }: ModalProps) {
   return (
     <DialogPrimitive.Root {...props}>
-      <DialogPrimitive.Overlay className="bg-black/70 backdrop-blur-md fixed inset-0 w-screen h-screen" />
+      <DialogPrimitive.Overlay className="bg-black/70 backdrop-blur-md fixed inset-0 w-screen h-screen z-50" />
       {children}
     </DialogPrimitive.Root>
   )
@@ -26,7 +26,7 @@ export function ModalWrapper({
   return (
     <DialogPrimitive.Content
       {...props}
-      className="w-4/5 sm:max-w-xl bg-[#202024] border border-[#323238] absolute top-1/2 left-1/2 rounded-md p-8 -translate-x-1/2 -translate-y-1/2"
+      className="w-4/5 sm:max-w-xl bg-[#202024] border border-[#323238] absolute top-1/2 left-1/2 z-50 rounded-md p-8 -translate-x-1/2 -translate-y-1/2"
     >
       {children}
     </DialogPrimitive.Content>
