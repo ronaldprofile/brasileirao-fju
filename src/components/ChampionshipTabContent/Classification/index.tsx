@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { api } from '@/lib/axios'
 import { CircleNotch } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
@@ -84,10 +85,15 @@ export function Classification() {
                     key={team.uuid}
                     className="h-10 hover:bg-[#323238] transition-colors"
                   >
-                    <td className="h-10 pl-4 flex items-center gap-3 text-sm text-[#A9A9B2]">
-                      <span>{position}</span>
-                      <img src={team.shield} alt="" className="w-6 h-6" />
-                      <span className="ml-2">{team.name}</span>
+                    <td className="h-10 pl-4 text-sm text-[#A9A9B2]">
+                      <Link
+                        href={`/teams/${team.uuid}`}
+                        className="flex items-center gap-3"
+                      >
+                        <span>{position}</span>
+                        <img src={team.shield} alt="" className="w-6 h-6" />
+                        <span className="ml-2">{team.name}</span>
+                      </Link>
                     </td>
                     <td className="text-sm text-center text-[#A9A9B2]">0</td>
                     <td className="text-sm text-center text-[#A9A9B2]">0</td>

@@ -7,13 +7,13 @@ import { Heading } from './Heading'
 import { StepTeamLogo } from './TeamLogo'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { api } from '@/lib/axios'
+import { toast } from 'react-toastify'
 import {
   createTeamFormData,
   createTeamFormDataInputs,
   createTeamFormSchema,
 } from '@/schemas/team'
-import { api } from '@/lib/axios'
-import { toast } from 'react-toastify'
 
 export function Steps() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -31,18 +31,21 @@ export function Steps() {
     const createTeam = {
       name: data.name,
       shield: data.shield,
-      acronym: 'LIV',
+      acronym: '',
       playersIds: data.playersIds,
+      teamColorHighlight: data.teamColorHighlight,
     }
 
+    console.log(createTeam)
+
     try {
-      const res = await api.post('/teams/new', createTeam, {
+      await api.post('/teams/new', createTeam, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       })
 
-      toast.success(res.data.message)
+      toast.success('Time criado')
       reset()
 
       setCurrentStep(1)

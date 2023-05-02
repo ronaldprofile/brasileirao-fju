@@ -14,7 +14,7 @@ export function Heading({ currentStep, onPreviousStepForm }: HeadingProps) {
       {currentStep > 1 && (
         <button
           onClick={onPreviousStepForm}
-          className="mb-8 w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+          className="mb-8 w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md transition-colors"
         >
           <ArrowLeft size={18} color="#fff" />
         </button>

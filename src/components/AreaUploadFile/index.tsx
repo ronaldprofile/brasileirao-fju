@@ -1,7 +1,9 @@
+import { useCallback, useEffect, useState } from 'react'
 import { FileImage } from '@phosphor-icons/react'
 import { Input } from '../Input'
 
 import { useFormContext } from 'react-hook-form'
+
 import { createTeamFormData } from '@/schemas/team'
 import { ViewPhotoPreview } from '../ViewPhotoPreview'
 
@@ -11,6 +13,8 @@ interface AreaUploadFileProps {
 }
 
 export function AreaUploadFile({ label, title }: AreaUploadFileProps) {
+  const [imagePhotoPreview, setImagePhotoPreview] = useState('')
+
   const {
     register,
     watch,
@@ -22,14 +26,29 @@ export function AreaUploadFile({ label, title }: AreaUploadFileProps) {
     resetField(label)
   }
 
-  const watchUploadFile: FileList = watch(label)
-  const havePhotoSelected = watchUploadFile?.length > 0
+  const files: FileList = watch(label)
+  const havePhotoSelected = files?.length > 0
+
+  const handleGenerateImagePreview = useCallback(() => {
+    if (havePhotoSelected) {
+      const file = files[0]
+
+      const imagePreviewURL = URL.createObjectURL(file)
+
+      setImagePhotoPreview(imagePreviewURL)
+    }
+  }, [files, havePhotoSelected])
+
+  useEffect(() => {
+    handleGenerateImagePreview()
+  }, [files, handleGenerateImagePreview])
 
   return (
     <div className="w-full group">
       {havePhotoSelected ? (
         <ViewPhotoPreview
-          files={watchUploadFile}
+          fileInfo={files[0]}
+          imagePhotoPreview={imagePhotoPreview}
           onRemovePhotoSelected={handleRemovePhotoSelected}
         />
       ) : (

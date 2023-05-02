@@ -11,16 +11,23 @@ export function StepTeamLogo() {
   } = useFormContext<createTeamFormData>()
 
   const watchUploadFile: FileList = watch('shield', null)
+  const teamColorHighlight = watch('teamColorHighlight', '')
+
+  const teamColorHighlightIsEmpty = teamColorHighlight?.length === 0
   const havePhotoSelected = watchUploadFile?.length > 0
 
-  const buttonDisabled = !havePhotoSelected || isSubmitting
+  const buttonDisabled = !havePhotoSelected || teamColorHighlightIsEmpty
 
   return (
     <div>
       <FormBox>
         <AreaUploadFile label="shield" title="Logo do time" />
 
-        <Button type="submit" className="w-full mt-4" disabled={buttonDisabled}>
+        <Button
+          type="submit"
+          className="w-full mt-4"
+          disabled={buttonDisabled || isSubmitting}
+        >
           Salvar
         </Button>
       </FormBox>
