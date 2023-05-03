@@ -17,9 +17,10 @@ interface Player {
 
 interface PlayerCardProps {
   player: Player
+  modeShow: 'championship' | 'team'
 }
 
-export function PlayerCard({ player }: PlayerCardProps) {
+export function PlayerCard({ player, modeShow }: PlayerCardProps) {
   const team = player.team
 
   const words = team ? team.name.split(' ') : []
@@ -42,15 +43,19 @@ export function PlayerCard({ player }: PlayerCardProps) {
           {player.name}
         </span>
 
-        <span className="flex items-center gap-2 text-xs">
-          {teamShield ? (
-            <img src={teamShield} alt={teamName} className="w-6 h-6" />
-          ) : (
-            <Shield size={16} />
-          )}
+        {modeShow === 'championship' ? (
+          <span className="flex items-center gap-2 text-xs">
+            {teamShield ? (
+              <img src={teamShield} alt={teamName} className="w-6 h-6" />
+            ) : (
+              <Shield size={16} />
+            )}
 
-          {teamName}
-        </span>
+            {teamName}
+          </span>
+        ) : (
+          <span></span>
+        )}
       </div>
     </div>
   )
