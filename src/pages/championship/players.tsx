@@ -25,7 +25,13 @@ export default function Players() {
         {!isLoading && !playersIsEmpty && (
           <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 px-2 pt-2 pb-10">
             {players?.map((player: any) => {
-              return <PlayerCard key={player.uuid} player={player} />
+              return (
+                <PlayerCard
+                  key={player.uuid}
+                  player={player}
+                  modeShow="championship"
+                />
+              )
             })}
           </div>
         )}
