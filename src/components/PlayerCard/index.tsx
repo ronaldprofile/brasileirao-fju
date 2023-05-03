@@ -39,7 +39,7 @@ export function PlayerCard({ player, modeShow }: PlayerCardProps) {
       />
 
       <div className="p-2 flex flex-1 flex-col justify-end gap-1 text-[#a9a9b2]">
-        <span className="block max-w-[58px] text-sm overflow-hidden text-ellipsis">
+        <span className="block max-w-[80px] text-sm overflow-hidden text-ellipsis">
           {player.name}
         </span>
 
