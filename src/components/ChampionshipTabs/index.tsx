@@ -1,56 +1,33 @@
 import cx from 'clsx'
+import { TabActiveLink } from '../TabActiveLink'
+
 import styles from './styles.module.css'
-import { TabsOptions } from '@/@types/tab.options'
 
-interface ChampionshipTabsProps {
-  tabActive: TabsOptions
-  onChangeTabActive: (tab: TabsOptions) => void
-}
-
-export function ChampionshipTabs({
-  onChangeTabActive,
-  tabActive,
-}: ChampionshipTabsProps) {
+export function ChampionshipTabs() {
   return (
     <nav className="w-full max-w-3xl h-12 mx-auto">
       <ul className="h-full grid grid-cols-4">
-        <li
-          onClick={() => onChangeTabActive('matches')}
-          className={cx(
-            styles.tab,
-            tabActive === 'matches' && `${styles['tab-active']}`,
-          )}
+        <TabActiveLink href={'/championship'} className={cx(styles.tab)}>
+          <li>Partidas</li>
+        </TabActiveLink>
+
+        <TabActiveLink href={'/championship/table'} className={cx(styles.tab)}>
+          <li>Classificações</li>
+        </TabActiveLink>
+
+        <TabActiveLink
+          href={'/championship/statistics'}
+          className={cx(styles.tab)}
         >
-          Partidas
-        </li>
-        <li
-          onClick={() => onChangeTabActive('classification')}
-          className={cx(
-            styles.tab,
-            tabActive === 'classification' && `${styles['tab-active']}`,
-          )}
+          <li>Estastísticas</li>
+        </TabActiveLink>
+
+        <TabActiveLink
+          href={'/championship/players'}
+          className={cx(styles.tab)}
         >
-          Classificações
-        </li>
-        <li
-          // onClick={() => onChangeTabActive('statistics')}
-          className={cx(
-            styles.tab,
-            styles['tab-inactive'],
-            tabActive === 'statistics' && `${styles['tab-active']}`,
-          )}
-        >
-          Estastísticas
-        </li>
-        <li
-          onClick={() => onChangeTabActive('players')}
-          className={cx(
-            styles.tab,
-            tabActive === 'players' && `${styles['tab-active']}`,
-          )}
-        >
-          Jogadores
-        </li>
+          <li>Jogadores</li>
+        </TabActiveLink>
       </ul>
     </nav>
   )
