@@ -7,6 +7,7 @@ import { Heading } from './Heading'
 import { StepTeamLogo } from './TeamLogo'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { formatAcronymTeam } from '@/utils/format-acronym-team'
 import {
   createTeamFormData,
   createTeamFormDataInputs,
@@ -31,7 +32,7 @@ export function Steps() {
     const createTeam = {
       name: data.name,
       shield: data.shield,
-      acronym: '',
+      acronym: formatAcronymTeam(data.name),
       playersIds: data.playersIds,
     }
 
@@ -48,6 +49,7 @@ export function Steps() {
       setCurrentStep(1)
     } catch (error) {
       console.log(error)
+      toast.error('Algo deu errado')
     }
   }
 
