@@ -3,6 +3,8 @@ import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
 import cx from 'clsx'
 
+import styles from './style.module.css'
+
 interface TabActiveLinkProps extends LinkProps {
   children?: ReactElement
   className?: string
@@ -39,9 +41,7 @@ export function TabActiveLink({
   return (
     <Link
       {...restProps}
-      className={cx(className, {
-        'border-b-2 border-b-white': isActive,
-      })}
+      className={cx(styles.tab, isActive && styles['tab-active'])}
     >
       {children}
     </Link>
