@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { delay } from '@/utils/delay-api'
 import { useEffect, useState } from 'react'
 
 interface Team {
@@ -17,8 +18,6 @@ interface Player {
 }
 
 async function getPlayersChampionship() {
-  // : `/teams/show/${teamId}`
-
   const response = await api.get<{ data: Player[] }>('/players')
 
   const { data: allPlayers } = response.data
@@ -38,8 +37,10 @@ export function usePlayers() {
 
       const { allPlayers } = await getPlayersChampionship()
 
-      setIsLoading(false)
       setPlayers(allPlayers)
+
+      await delay(1800)
+      setIsLoading(false)
     }
 
     fetchData()

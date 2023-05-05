@@ -1,4 +1,5 @@
 import { Shield } from '@phosphor-icons/react'
+import Image from 'next/image'
 
 interface Team {
   name: string
@@ -32,8 +33,11 @@ export function PlayerCard({ player, modeShow }: PlayerCardProps) {
 
   return (
     <div className="h-full flex flex-col border border-[#323238] rounded-md cursor-pointer group">
-      <img
+      <Image
         className="w-full rounded-t h-[100px] object-cover group-hover:scale-105 transition-transform"
+        height={100}
+        width={100}
+        loading="lazy"
         src={player.avatar}
         alt={player.name}
       />
