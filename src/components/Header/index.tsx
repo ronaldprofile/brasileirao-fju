@@ -12,10 +12,6 @@ interface HeaderProps {
 export function Header({ title, avatar, backgroundHighlight }: HeaderProps) {
   const router = useRouter()
 
-  function handleBackPage() {
-    router.push('/championship')
-  }
-
   return (
     <header
       className={cx('flex flex-col  border-b border-b-[#323238]')}
@@ -26,7 +22,7 @@ export function Header({ title, avatar, backgroundHighlight }: HeaderProps) {
       <div className="p-6 flex justify-between">
         <div className="flex items-center gap-2">
           <button
-            onClick={handleBackPage}
+            onClick={router.back}
             className="w-8 h-8 flex justify-center items-center hover:bg-white/10 rounded-md transition-colors"
           >
             <ArrowLeft size={18} color="#fff" />

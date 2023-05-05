@@ -31,7 +31,7 @@ export function PlayerCard({ player, modeShow }: PlayerCardProps) {
   const teamShield = player.team?.shield
 
   return (
-    <div className="flex flex-col border border-[#323238] rounded-md cursor-pointer group">
+    <div className="h-full flex flex-col border border-[#323238] rounded-md cursor-pointer group">
       <img
         className="w-full rounded-t h-[100px] object-cover group-hover:scale-105 transition-transform"
         src={player.avatar}
@@ -44,7 +44,7 @@ export function PlayerCard({ player, modeShow }: PlayerCardProps) {
         </span>
 
         {modeShow === 'championship' ? (
-          <span className="flex items-center gap-2 text-xs">
+          <span className="flex items-center gap-1 text-xs">
             {teamShield ? (
               <img src={teamShield} alt={teamName} className="w-6 h-6" />
             ) : (

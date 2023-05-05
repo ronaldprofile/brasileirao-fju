@@ -3,6 +3,7 @@ import { PlayerCard } from '@/components/PlayerCard'
 import { usePlayers } from '@/hooks/use-players-championship'
 import { CircleNotch } from '@phosphor-icons/react'
 import cx from 'clsx'
+import Link from 'next/link'
 
 export default function Players() {
   const { isLoading, players } = usePlayers()
@@ -24,13 +25,11 @@ export default function Players() {
 
         {!isLoading && !playersIsEmpty && (
           <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 px-2 pt-2 pb-10">
-            {players?.map((player: any) => {
+            {players?.map((player) => {
               return (
-                <PlayerCard
-                  key={player.uuid}
-                  player={player}
-                  modeShow="championship"
-                />
+                <Link href={`/player/${player.uuid}`} key={player.uuid}>
+                  <PlayerCard player={player} modeShow="championship" />
+                </Link>
               )
             })}
           </div>
