@@ -56,7 +56,7 @@ export default function PlayerProfile() {
               <div className="mt-6">
                 <span className="text-sm text-[#a9a9b2]">Equipe atual</span>
 
-                {player.team && (
+                {player.team ? (
                   <div>
                     <a
                       href="#"
@@ -69,6 +69,10 @@ export default function PlayerProfile() {
                         className="w-6"
                       />
                     </a>
+                  </div>
+                ) : (
+                  <div>
+                    <span>Sem clube</span>
                   </div>
                 )}
               </div>
