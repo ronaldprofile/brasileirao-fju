@@ -29,7 +29,7 @@ async function getPlayersChampionship() {
 
 export function usePlayers() {
   const [players, setPlayers] = useState<Player[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
