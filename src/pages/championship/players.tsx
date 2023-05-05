@@ -1,7 +1,7 @@
 import { ChampionshipLayout } from '@/components/ChampionshipLayout'
 import { PlayerCard } from '@/components/PlayerCard'
-import { usePlayers } from '@/hooks/use-players-championship'
-import { CircleNotch } from '@phosphor-icons/react'
+import { PlayerSkeleton } from '@/components/PlayerCard/PlayerSkeleton'
+import { usePlayers } from '@/hooks/get-players-championship'
 import cx from 'clsx'
 import Link from 'next/link'
 
@@ -11,29 +11,28 @@ export default function Players() {
 
   return (
     <ChampionshipLayout>
-      <div
-        className={cx(
-          'bg-[#202024]',
-          isLoading && 'flex justify-center items-center',
-        )}
-      >
-        {isLoading && (
-          <div className="p-2  text-white">
-            <CircleNotch size={24} className="animate-spin" />
-          </div>
-        )}
+      <div className={cx('bg-[#202024]')}>
+        <div className="px-2 pt-2 pb-10">
+          {isLoading && (
+            <div className="flex flex-wrap gap-2">
+              {Array.from({ length: 14 }).map((_, index) => (
+                <PlayerSkeleton key={index} />
+              ))}
+            </div>
+          )}
 
-        {!isLoading && !playersIsEmpty && (
-          <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 px-2 pt-2 pb-10">
-            {players?.map((player) => {
-              return (
-                <Link href={`/player/${player.uuid}`} key={player.uuid}>
-                  <PlayerCard player={player} modeShow="championship" />
-                </Link>
-              )
-            })}
-          </div>
-        )}
+          {!isLoading && !playersIsEmpty && (
+            <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
+              {players?.map((player) => {
+                return (
+                  <Link href={`/player/${player.uuid}`} key={player.uuid}>
+                    <PlayerCard player={player} modeShow="championship" />
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </ChampionshipLayout>
   )
