@@ -39,7 +39,7 @@ export function usePlayers() {
 
       setPlayers(allPlayers)
 
-      await delay(1800)
+      await delay(500)
       setIsLoading(false)
     }
 
