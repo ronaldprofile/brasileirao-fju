@@ -8,13 +8,21 @@ interface Team {
   shield: string
 }
 
-async function getTeamChampionship() {
-  const { data: teamsList } = await api.get<{ data: Team[] }>('/teams')
+interface GetTeamParams {
+  incompleteTeams: number
+}
+
+async function getTeamChampionship(paramsOptions?: GetTeamParams) {
+  const { data: teamsList } = await api.get<{ data: Team[] }>('/teams', {
+    params: {
+      ...paramsOptions,
+    },
+  })
   const teams = teamsList.data
   return { teams }
 }
 
-export function useTeams() {
+export function useTeams(params?: GetTeamParams) {
   const [teams, setTeams] = useState<Team[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -24,13 +32,14 @@ export function useTeams() {
     const fetchData = async () => {
       setIsLoading(true)
 
-      const { teams } = await getTeamChampionship()
+      const { teams } = await getTeamChampionship(params)
 
       setIsLoading(false)
       setTeams(teams)
     }
 
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return {
