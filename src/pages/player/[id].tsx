@@ -39,16 +39,16 @@ export default function PlayerProfile() {
 
   const [teamOptionSelected, setTeamOptionSelected] = useState<TeamOption>(null)
 
-  const { player, isLoading: playerIsLoadind } = useGetPlayerByUuid(playerId)
-  const { teams } = useTeams({ incompleteTeams: 1 })
+  const { data: playerData, isLoading: playerIsLoadind } =
+    useGetPlayerByUuid(playerId)
 
-  const handleSelectTeam = (team: Option) => setTeamOptionSelected(team)
+  const { data } = useTeams({ incompleteTeams: 1 })
 
   async function handleLinkPlayerToTeam() {
     try {
       if (teamOptionSelected) {
         const data = {
-          ...player,
+          ...playerData?.player,
           teamId: teamOptionSelected.value,
         }
 
@@ -61,7 +61,11 @@ export default function PlayerProfile() {
     }
   }
 
-  const options = teams.map((team) => {
+  function handleSelectTeam(team: Option) {
+    setTeamOptionSelected(team)
+  }
+
+  const options = data?.teams.map((team) => {
     return {
       label: team.name,
       value: team.uuid,
@@ -98,28 +102,30 @@ export default function PlayerProfile() {
             <>
               <div className="flex flex-col items-center gap-3">
                 <img
-                  src={player.avatar}
-                  alt={player.name}
+                  src={playerData?.player.avatar}
+                  alt={playerData?.player.name}
                   className="w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full"
                 />
 
-                <strong className="text-xl sm:text-2xl">{player.name}</strong>
+                <strong className="text-xl sm:text-2xl">
+                  {playerData?.player.name}
+                </strong>
               </div>
 
               <div className="mt-6">
                 <div>
                   <span className="text-sm text-[#a9a9b2]">Equipe atual</span>
 
-                  {player.team ? (
+                  {playerData?.player.team ? (
                     <div>
                       <a
                         href="#"
                         className="flex items-center gap-2 text-[#a9a9b2] hover:underline underline-offset-2 decoration-current transition"
                       >
-                        {player.team.name}
+                        {playerData?.player.team.name}
                         <img
-                          src={player.team.shield}
-                          alt={player.team.name}
+                          src={playerData?.player.team.shield}
+                          alt={playerData?.player.team.name}
                           className="w-6"
                         />
                       </a>
@@ -131,7 +137,7 @@ export default function PlayerProfile() {
                       <div className="mt-6 flex items-stretch gap-4">
                         <CustomSelect
                           className="w-full"
-                          options={options}
+                          options={options ?? []}
                           value={teamOptionSelected}
                           onChange={(option) =>
                             handleSelectTeam(option as Option)

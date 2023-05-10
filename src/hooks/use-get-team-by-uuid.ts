@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
 import { api } from '@/lib/axios'
+import { useQuery } from '@tanstack/react-query'
 
 interface Player {
   uuid: string
@@ -28,33 +28,6 @@ async function getTeamByUuid(uuid?: string) {
   return { team }
 }
 
-const INITIAL_TEAM: Team = {
-  name: '',
-  acronym: '',
-  players: [],
-  shield: '',
-  uuid: '',
-}
-
 export function useGetTeamByUuid(uuid?: string) {
-  const [team, setTeam] = useState<Team>(INITIAL_TEAM)
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-
-      const { team } = await getTeamByUuid(uuid)
-
-      setIsLoading(false)
-      setTeam(team)
-    }
-
-    fetchData()
-  }, [uuid])
-
-  return {
-    team,
-    isLoading,
-  }
+  return useQuery(['team', uuid], async () => await getTeamByUuid(uuid))
 }

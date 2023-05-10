@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
 import { api } from '@/lib/axios'
-import { delay } from '@/utils/delay-api'
+import { useQuery } from '@tanstack/react-query'
 
 interface Team {
   name: string
@@ -10,9 +9,9 @@ interface Team {
 interface Player {
   uuid: string
   name: string
+  avatar: string
   nickname: string
   shirtNumber: string
-  avatar: string
 
   team: Team | null
 }
@@ -26,37 +25,6 @@ async function getPlayerByUuid(uuid?: string) {
   return { player }
 }
 
-const INITIAL_PLAYER: Player = {
-  uuid: '',
-  avatar: '',
-  name: '',
-  nickname: '',
-  shirtNumber: '',
-  team: null,
-}
-
 export function useGetPlayerByUuid(uuid?: string) {
-  const [player, setPlayer] = useState<Player>(INITIAL_PLAYER)
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-
-      const { player } = await getPlayerByUuid(uuid)
-
-      setPlayer(player)
-
-      await delay(1500)
-
-      setIsLoading(false)
-    }
-
-    fetchData()
-  }, [uuid])
-
-  return {
-    player,
-    isLoading,
-  }
+  return useQuery(['player', uuid], async () => await getPlayerByUuid(uuid))
 }

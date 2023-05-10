@@ -1,10 +1,12 @@
 import { ChampionshipLayout } from '@/components/ChampionshipLayout'
-import { useTeams } from '@/hooks/use-teams-championship'
+import { useTeams } from '@/hooks/get-teams-championship'
 import { CircleNotch } from '@phosphor-icons/react'
 import Link from 'next/link'
 
 export default function Classification() {
-  const { teams, teamsIsEmpty, isLoading } = useTeams()
+  const { data, isLoading } = useTeams()
+
+  const teamsIsEmpty = data?.teams.length === 0
 
   return (
     <ChampionshipLayout>
@@ -53,7 +55,7 @@ export default function Classification() {
             </thead>
 
             <tbody className="divide-y divide-[#323238]">
-              {teams.map((team, index) => {
+              {data?.teams.map((team, index) => {
                 const position = index + 1
 
                 return (

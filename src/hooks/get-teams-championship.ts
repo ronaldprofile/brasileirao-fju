@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios'
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 interface Team {
   uuid: string
@@ -12,7 +12,7 @@ interface GetTeamParams {
   incompleteTeams: number
 }
 
-async function getTeamChampionship(paramsOptions?: GetTeamParams) {
+async function getTeamsChampionship(paramsOptions?: GetTeamParams) {
   const { data: teamsList } = await api.get<{ data: Team[] }>('/teams', {
     params: {
       ...paramsOptions,
@@ -23,28 +23,5 @@ async function getTeamChampionship(paramsOptions?: GetTeamParams) {
 }
 
 export function useTeams(params?: GetTeamParams) {
-  const [teams, setTeams] = useState<Team[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  const teamsIsEmpty = teams.length === 0
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-
-      const { teams } = await getTeamChampionship(params)
-
-      setIsLoading(false)
-      setTeams(teams)
-    }
-
-    fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return {
-    teams,
-    teamsIsEmpty,
-    isLoading,
-  }
+  return useQuery(['teams'], async () => await getTeamsChampionship(params))
 }

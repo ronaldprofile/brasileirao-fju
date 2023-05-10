@@ -1,6 +1,5 @@
 import { api } from '@/lib/axios'
-import { delay } from '@/utils/delay-api'
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 interface Team {
   name: string
@@ -20,34 +19,13 @@ interface Player {
 async function getPlayersChampionship() {
   const response = await api.get<{ data: Player[] }>('/players')
 
-  const { data: allPlayers } = response.data
+  const { data: players } = response.data
 
   return {
-    allPlayers,
+    players,
   }
 }
 
 export function usePlayers() {
-  const [players, setPlayers] = useState<Player[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-
-      const { allPlayers } = await getPlayersChampionship()
-
-      setPlayers(allPlayers)
-
-      await delay(500)
-      setIsLoading(false)
-    }
-
-    fetchData()
-  }, [])
-
-  return {
-    players,
-    isLoading,
-  }
+  return useQuery(['players'], async () => await getPlayersChampionship())
 }

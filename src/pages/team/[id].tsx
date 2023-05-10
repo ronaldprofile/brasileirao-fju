@@ -16,17 +16,15 @@ export default function Team() {
   const { id } = query as PageQuery
   const [teamId, setTeamId] = useState<string>(id)
 
-  const { isLoading, team } = useGetTeamByUuid(id)
-
-  const teamPlayersIsEmpty = team.players.length === 0
+  const { data, isLoading, status } = useGetTeamByUuid(id)
 
   useEffect(() => {
     setTeamId(id)
-  }, [id, team])
+  }, [id, data?.team])
 
   return (
     <div className="w-full h-full">
-      <Header title={team.name} avatar={team.shield} />
+      <Header title={data?.team.name ?? ''} avatar={data?.team.shield} />
 
       <main className="mt-6">
         <div className="w-full max-w-3xl h-12 mx-auto px-6 lg:px-0">
@@ -43,9 +41,17 @@ export default function Team() {
                 </div>
               )}
 
-              {!isLoading && teamId && !teamPlayersIsEmpty && (
+              {!isLoading && status === 'error' && (
+                <div className="p-2 flex justify-center items-center">
+                  <span className="text-sm text-[#a9a9b2]">
+                    Algo deu errado
+                  </span>
+                </div>
+              )}
+
+              {!isLoading && status === 'success' && (
                 <div className="grid grid-cols-3 sm:grid-cols-7 gap-2 px-2 pt-2 pb-10">
-                  {team.players.map((player) => {
+                  {data?.team.players.map((player) => {
                     return (
                       <PlayerCard
                         key={player.uuid}

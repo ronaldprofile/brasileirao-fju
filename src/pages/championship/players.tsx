@@ -6,8 +6,8 @@ import cx from 'clsx'
 import Link from 'next/link'
 
 export default function Players() {
-  const { isLoading, players } = usePlayers()
-  const playersIsEmpty = players.length === 0
+  const { data, isLoading } = usePlayers()
+  const playersIsEmpty = data?.players.length === 0
 
   return (
     <ChampionshipLayout>
@@ -23,7 +23,7 @@ export default function Players() {
 
           {!isLoading && !playersIsEmpty && (
             <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
-              {players?.map((player) => {
+              {data?.players.map((player) => {
                 return (
                   <Link href={`/player/${player.uuid}`} key={player.uuid}>
                     <PlayerCard player={player} modeShow="championship" />
