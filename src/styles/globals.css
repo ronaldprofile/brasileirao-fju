@@ -12,11 +12,15 @@ body {
 }
 
 .css-b62m3t-container .css-13cymwt-control {
-  @apply h-full bg-[#202024] border-[#323238] shadow-none hover:border-[#323238]
+  @apply bg-[#202024] border-[#323238] shadow-none hover:border-[#323238]
+}
+
+.css-b62m3t-container .css-1nmdiq5-menu {
+  @apply bg-[#202024]
 }
 
 .css-1nmdiq5-menu .css-1n6sfyn-MenuList {
-  @apply py-0
+  @apply py-0 border border-[#323238] rounded-md
 }
 
 .css-1fdsijx-ValueContainer .css-1dimb5e-singleValue {

@@ -25,6 +25,22 @@ async function getPlayerByUuid(uuid?: string) {
   return { player }
 }
 
+const INITIAL_PLAYER: Player = {
+  uuid: '',
+  avatar: '',
+  name: '',
+  nickname: '',
+  shirtNumber: '',
+  team: null,
+}
+
 export function useGetPlayerByUuid(uuid?: string) {
-  return useQuery(['player', uuid], async () => await getPlayerByUuid(uuid))
+  return useQuery(['player', uuid], async () => await getPlayerByUuid(uuid), {
+    refetchOnWindowFocus: false,
+    initialData: () => {
+      return {
+        player: INITIAL_PLAYER,
+      }
+    },
+  })
 }

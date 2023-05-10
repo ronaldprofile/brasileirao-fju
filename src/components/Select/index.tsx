@@ -11,7 +11,10 @@ interface CustomSelectProps extends Props {
 }
 
 const Option = (props: any) => (
-  <components.Option {...props} className="bg-[#202024] hover:bg-[#323238]">
+  <components.Option
+    {...props}
+    className="bg-[#202024] hover:bg-[#323238] cursor-pointer"
+  >
     <div className="flex items-center gap-3 text-[#a9a9b2]">
       <img src={props.data.image} alt={props.data.label} className="w-6" />
 

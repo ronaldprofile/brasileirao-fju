@@ -1,6 +1,6 @@
-import '@/styles/globals.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.css'
+import '@/styles/globals.css'
 
 import { ToastContainer } from 'react-toastify'
 import { SkeletonTheme } from 'react-loading-skeleton'
