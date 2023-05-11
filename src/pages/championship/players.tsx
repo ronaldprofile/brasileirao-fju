@@ -9,6 +9,14 @@ export default function Players() {
   const { data, isLoading } = usePlayers()
   const playersIsEmpty = data?.players.length === 0
 
+  const orderPlayers = data?.players.sort((a, _) => {
+    if (a.team) {
+      return 1
+    } else {
+      return -1
+    }
+  })
+
   return (
     <ChampionshipLayout>
       <div className={cx('bg-[#202024]')}>
@@ -23,7 +31,7 @@ export default function Players() {
 
           {!isLoading && !playersIsEmpty && (
             <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
-              {data?.players.map((player) => {
+              {orderPlayers?.map((player) => {
                 return (
                   <Link href={`/player/${player.uuid}`} key={player.uuid}>
                     <PlayerCard player={player} modeShow="championship" />
