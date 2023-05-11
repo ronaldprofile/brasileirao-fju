@@ -47,8 +47,7 @@ export default function PlayerProfile() {
 
   const queryClient = useQueryClient()
 
-  const { data: playerData, isLoading: playerIsLoadind } =
-    useGetPlayerByUuid(playerId)
+  const { data: playerData, isLoading } = useGetPlayerByUuid(playerId)
 
   const { data } = useTeams({ incompleteTeams: 1 })
 
@@ -91,7 +90,7 @@ export default function PlayerProfile() {
     }
   })
 
-  const playerHasTeam = playerData.player.team
+  const playerHasTeam = playerData?.player.team
   const disableButton = !teamOptionSelected
 
   useEffect(() => {
@@ -100,13 +99,8 @@ export default function PlayerProfile() {
 
   return (
     <div className="h-full w-full flex justify-center items-center">
-      {playerIsLoadind ? (
-        <div
-          className={cx('w-full mx-4', {
-            'max-w-lg': playerHasTeam,
-            'max-w-3xl grid grid-cols-2 gap-3': !playerHasTeam,
-          })}
-        >
+      {isLoading ? (
+        <div className={cx('w-full mx-4 max-w-3xl grid grid-cols-2 gap-3')}>
           <div className="bg-[#202024] border border-[#323238] rounded-md">
             <div className="p-6">
               <div className="flex flex-col items-center gap-3">
@@ -146,66 +140,43 @@ export default function PlayerProfile() {
         >
           <div className="w-full bg-[#202024] border border-[#323238] rounded-md">
             <div className="p-6">
-              {playerIsLoadind ? (
-                <>
-                  <div className="flex flex-col items-center gap-3">
-                    <Skeleton width={160} height={160} circle />
+              <div className="flex flex-col items-center gap-3">
+                <img
+                  src={playerData?.player.avatar}
+                  alt={playerData?.player.name}
+                  className="w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full"
+                />
 
-                    <Skeleton width={100} />
-                  </div>
+                <strong className="text-xl sm:text-2xl">
+                  {playerData?.player.name}
+                </strong>
+              </div>
 
-                  <div className="mt-6">
-                    <Skeleton width={90} />
+              <div className="mt-6">
+                <div>
+                  <span className="text-sm text-[#a9a9b2]">Equipe atual</span>
 
-                    <div className="flex items-center gap-2">
-                      <Skeleton width={120} height={24} />
-                      <Skeleton circle width={24} height={24} />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-col items-center gap-3">
-                    <img
-                      src={playerData?.player.avatar}
-                      alt={playerData?.player.name}
-                      className="w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full"
-                    />
-
-                    <strong className="text-xl sm:text-2xl">
-                      {playerData?.player.name}
-                    </strong>
-                  </div>
-
-                  <div className="mt-6">
+                  {playerHasTeam ? (
                     <div>
-                      <span className="text-sm text-[#a9a9b2]">
-                        Equipe atual
-                      </span>
-
-                      {playerHasTeam ? (
-                        <div>
-                          <a
-                            href="#"
-                            className="flex items-center gap-2 text-[#a9a9b2] hover:underline underline-offset-2 decoration-current transition"
-                          >
-                            {playerHasTeam?.name}
-                            <img
-                              src={playerHasTeam?.shield}
-                              alt={playerHasTeam?.name}
-                              className="w-6"
-                            />
-                          </a>
-                        </div>
-                      ) : (
-                        <div>
-                          <span>Sem clube</span>
-                        </div>
-                      )}
+                      <a
+                        href="#"
+                        className="flex items-center gap-2 text-[#a9a9b2] hover:underline underline-offset-2 decoration-current transition"
+                      >
+                        {playerHasTeam?.name}
+                        <img
+                          src={playerHasTeam?.shield}
+                          alt={playerHasTeam?.name}
+                          className="w-6"
+                        />
+                      </a>
                     </div>
-                  </div>
-                </>
-              )}
+                  ) : (
+                    <div>
+                      <span>Sem clube</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 

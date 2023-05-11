@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { delay } from '@/utils/delay-api'
 import { useQuery } from '@tanstack/react-query'
 
 interface Team {
@@ -22,24 +23,12 @@ async function getPlayerByUuid(uuid?: string) {
   const { data: playerResult } = await api.get<{ data: Player }>(route)
 
   const player = playerResult.data
+
+  await delay()
+
   return { player }
 }
 
-const INITIAL_PLAYER: Player = {
-  uuid: '',
-  avatar: '',
-  name: '',
-  nickname: '',
-  shirtNumber: '',
-  team: null,
-}
-
 export function useGetPlayerByUuid(uuid?: string) {
-  return useQuery(['player', uuid], async () => await getPlayerByUuid(uuid), {
-    initialData: () => {
-      return {
-        player: INITIAL_PLAYER,
-      }
-    },
-  })
+  return useQuery(['player', uuid], async () => await getPlayerByUuid(uuid))
 }
