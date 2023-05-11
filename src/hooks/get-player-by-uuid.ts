@@ -36,7 +36,6 @@ const INITIAL_PLAYER: Player = {
 
 export function useGetPlayerByUuid(uuid?: string) {
   return useQuery(['player', uuid], async () => await getPlayerByUuid(uuid), {
-    refetchOnWindowFocus: false,
     initialData: () => {
       return {
         player: INITIAL_PLAYER,
