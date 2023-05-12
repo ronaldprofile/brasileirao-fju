@@ -4,7 +4,7 @@ interface TableSkeletonProps {
   count?: number
 }
 
-export function TableSkeleton({ count = 10 }: TableSkeletonProps) {
+export function TableSkeleton({ count = 5 }: TableSkeletonProps) {
   return (
     <table className="w-full mt-2 bg-[#202024]">
       <div className="px-4 py-2 border-b border-b-[#323238]">
