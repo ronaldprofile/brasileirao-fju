@@ -34,6 +34,7 @@ export function Steps() {
       shield: data.shield,
       acronym: formatAcronymTeam(data.name),
       playersIds: data.playersIds,
+      championshipId: 'z7xRoR9dWup3JeEEBQyr',
     }
 
     try {
