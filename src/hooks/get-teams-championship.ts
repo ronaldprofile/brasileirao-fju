@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { getChampionshipIdStorage } from '@/utils/getChampionshipIdStorage'
 import { useQuery } from '@tanstack/react-query'
 
 interface Team {
@@ -13,9 +14,12 @@ interface GetTeamParams {
 }
 
 async function getTeamsChampionship(paramsOptions?: GetTeamParams) {
+  const id = getChampionshipIdStorage()
+
   const { data: teamsList } = await api.get<{ data: Team[] }>('/teams', {
     params: {
       ...paramsOptions,
+      championshipId: id,
     },
   })
   const teams = teamsList.data

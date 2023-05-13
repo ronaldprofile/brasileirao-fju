@@ -15,6 +15,7 @@ import {
 } from '@/schemas/team'
 import { api } from '@/lib/axios'
 import { toast } from 'react-toastify'
+import { getChampionshipIdStorage } from '@/utils/getChampionshipIdStorage'
 
 export function Steps() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -29,12 +30,14 @@ export function Steps() {
   const { handleSubmit, reset } = createTeamForm
 
   async function handleCreateTeam(data: createTeamFormDataInputs) {
+    const id = getChampionshipIdStorage()
+
     const createTeam = {
       name: data.name,
       shield: data.shield,
       acronym: formatAcronymTeam(data.name),
       playersIds: data.playersIds,
-      championshipId: 'z7xRoR9dWup3JeEEBQyr',
+      championshipId: id,
     }
 
     try {
