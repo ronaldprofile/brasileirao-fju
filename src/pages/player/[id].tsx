@@ -100,7 +100,7 @@ export default function PlayerProfile() {
   return (
     <div className="h-full w-full flex justify-center items-center">
       {isLoading ? (
-        <div className={cx('w-full mx-4 max-w-3xl grid grid-cols-2 gap-3')}>
+        <div className={cx('w-full mx-4 max-w-3xl grid sm:grid-cols-2 gap-3')}>
           <div className="bg-[#202024] border border-[#323238] rounded-md">
             <div className="p-6">
               <div className="flex flex-col items-center gap-3">
@@ -135,7 +135,7 @@ export default function PlayerProfile() {
         <div
           className={cx('w-full mx-4', {
             'max-w-lg': playerHasTeam,
-            'max-w-3xl grid grid-cols-2 gap-3': !playerHasTeam,
+            'sm:max-w-3xl grid sm:grid-cols-2 gap-3': !playerHasTeam,
           })}
         >
           <div className="w-full bg-[#202024] border border-[#323238] rounded-md">
