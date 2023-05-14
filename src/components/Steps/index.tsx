@@ -15,7 +15,7 @@ import {
 } from '@/schemas/team'
 import { api } from '@/lib/axios'
 import { toast } from 'react-toastify'
-import { getChampionshipIdStorage } from '@/utils/getChampionshipIdStorage'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 
 export function Steps() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -30,7 +30,7 @@ export function Steps() {
   const { handleSubmit, reset } = createTeamForm
 
   async function handleCreateTeam(data: createTeamFormDataInputs) {
-    const id = getChampionshipIdStorage()
+    const id = getChampionshipIdCookie()
 
     const createTeam = {
       name: data.name,

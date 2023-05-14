@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios'
-import { getChampionshipIdStorage } from '@/utils/getChampionshipIdStorage'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
 
 interface Team {
@@ -23,7 +23,7 @@ interface Matches {
 }
 
 async function getMatchesChampionship(roundId: string) {
-  const id = getChampionshipIdStorage()
+  const id = getChampionshipIdCookie()
 
   const { data: matchesList } = await api.post<{ data: Matches[] }>(
     '/confrontations',
