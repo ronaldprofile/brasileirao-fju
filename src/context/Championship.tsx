@@ -1,5 +1,6 @@
 import { ReactNode, useContext, createContext, useEffect } from 'react'
 import { useChampionships } from '@/hooks/get-championships'
+import { setCookie } from 'nookies'
 
 interface ChampionshipContextData {
   championshipId: string
@@ -17,7 +18,7 @@ export function ChampionshipProvider({ children }: ChampionshipProviderProps) {
   const championshipId = data?.championships[0].uuid ?? ''
 
   useEffect(() => {
-    localStorage.setItem('@ch:id', championshipId)
+    setCookie(null, '@championship:id', championshipId)
   }, [championshipId])
 
   return (

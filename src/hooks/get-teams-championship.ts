@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios'
-import { getChampionshipIdStorage } from '@/utils/getChampionshipIdStorage'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
 
 interface Team {
@@ -14,7 +14,7 @@ interface GetTeamParams {
 }
 
 async function getTeamsChampionship(paramsOptions?: GetTeamParams) {
-  const id = getChampionshipIdStorage()
+  const id = getChampionshipIdCookie()
 
   const { data: teamsList } = await api.get<{ data: Team[] }>('/teams', {
     params: {
