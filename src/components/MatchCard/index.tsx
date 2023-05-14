@@ -37,6 +37,7 @@ export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
           )}
           {match.awayTeam.name}
         </span>
+
         <span className="flex items-center gap-3 text-sm text-[#a9a9b2]">
           {match.homeTeam.shield ? (
             <img src={match.homeTeam.shield} alt="" className="w-6" />
