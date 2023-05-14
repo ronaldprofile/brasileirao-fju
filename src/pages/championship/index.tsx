@@ -52,7 +52,8 @@ export default function Championship() {
                   className="p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md"
                 >
                   <ArrowLeft size={20} />
-                  <span className="text-sm text-[#a9a9b2]">
+
+                  <span className="hidden sm:block text-sm text-[#a9a9b2]">
                     Rodada anterior
                   </span>
                 </button>
@@ -65,7 +66,9 @@ export default function Championship() {
                   onClick={handleNextRound}
                   className="p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md"
                 >
-                  <span className="text-sm text-[#a9a9b2]">Próxima rodada</span>
+                  <span className="hidden sm:block text-sm text-[#a9a9b2]">
+                    Próxima rodada
+                  </span>
                   <ArrowRight size={20} />
                 </button>
               </>
