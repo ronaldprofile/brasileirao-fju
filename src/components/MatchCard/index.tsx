@@ -27,7 +27,7 @@ interface MatchCardProps {
 
 export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
   return (
-    <div className="h-32 px-6 py-4 bg-[#202024] border-l border-t  border-[#323238] flex items-center justify-between cursor-pointer hover:bg-[#323238]/60 transition-colors">
+    <div className="h-32 px-6 py-4 bg-[#202024] border  border-[#323238] flex items-center justify-between cursor-pointer hover:bg-[#323238]/60 transition-colors">
       <div className="flex flex-col gap-1">
         <span className="flex items-center gap-3 text-sm text-[#a9a9b2]">
           {match.awayTeam.shield ? (
