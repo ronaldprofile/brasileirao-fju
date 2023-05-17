@@ -6,6 +6,7 @@ import { useRoundsChampionship } from '@/hooks/get-rounds-championship'
 import { ArrowLeft, ArrowRight } from '@phosphor-icons/react'
 import Skeleton from 'react-loading-skeleton'
 import { MatchCardSkeleton } from '@/components/MatchCard/MatchSkeleton'
+import Link from 'next/link'
 
 const INITIAL_ROUND = { name: '', uuid: '' }
 
@@ -86,7 +87,9 @@ export default function Championship() {
               ) : (
                 <>
                   {data?.matches.map((match) => (
-                    <MatchCard key={match.uuid} match={match} />
+                    <Link key={match.uuid} href={`/match/${match.uuid}`}>
+                      <MatchCard match={match} />
+                    </Link>
                   ))}
                 </>
               )}

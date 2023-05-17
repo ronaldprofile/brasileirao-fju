@@ -49,7 +49,11 @@ export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
       </div>
 
       <div className="h-full pt-3 sm:pl-4 flex flex-col items-center justify-center border-t-[1.2px] border-t-[#323238] sm:border-t-0 sm:border-l-[1.2px] sm:border-l-[#323238] ">
-        {matchClosed ? (
+        {!match.confrontationDate && (
+          <span className="text-xs text-[#a9a9b2]">A confirmar</span>
+        )}
+
+        {/* {matchClosed ? (
           <>
             <span className="text-xs text-[#a9a9b2] uppercase">fim</span>
             <span className="text-xs text-[#a9a9b2]">Hoje</span>
@@ -59,7 +63,7 @@ export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
             <span className="text-xs text-[#a9a9b2]">Sáb., 29/04</span>
             <span className="text-xs text-[#a9a9b2]">16:30</span>
           </>
-        )}
+        )} */}
       </div>
     </div>
   )
