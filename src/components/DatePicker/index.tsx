@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import cx from 'clsx'
 import dayjs from 'dayjs'
 import { CaretLeft, CaretRight } from '@phosphor-icons/react'
@@ -74,7 +75,15 @@ export function DatePicker() {
       <div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-white font-medium">{datePickerMonth}</span>
+            <motion.span
+              key={monthIndex}
+              className="text-white font-medium"
+              initial={{ opacity: 0, translateY: -5 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              {datePickerMonth}
+            </motion.span>
             <span className="text-[#a9a9b2]">{datePickerYear}</span>
           </div>
 
@@ -116,14 +125,17 @@ export function DatePicker() {
               <div key={day}></div>
             ))}
 
-            {daysDatePicker.map((day) => {
+            {daysDatePicker.map((day, index) => {
               const today = dayjs().date()
 
               const dayActive = day === today && dayjs().month() === monthIndex
 
               return (
-                <div
-                  key={day}
+                <motion.div
+                  key={`${monthIndex}-${index}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ ease: 'easeIn', delay: index * 0.1 }}
                   className={cx(
                     'cursor-pointer flex justify-center items-center h-[58px] rounded-md hover:bg-[#323238] transition-colors',
                     {
@@ -132,7 +144,7 @@ export function DatePicker() {
                   )}
                 >
                   <span className="text-white">{day}</span>
-                </div>
+                </motion.div>
               )
             })}
           </div>
