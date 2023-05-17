@@ -123,7 +123,7 @@ export function DatePicker() {
             {daysDatePicker.map((day) => {
               const today = dayjs().date()
 
-              const isDayOfToday = day === today
+              const dayActive = day === today && dayjs().month() === monthIndex
 
               return (
                 <div
@@ -131,7 +131,7 @@ export function DatePicker() {
                   className={cx(
                     'cursor-pointer flex justify-center items-center h-[58px] rounded-md hover:bg-[#323238] transition-colors',
                     {
-                      'bg-[#323238]': isDayOfToday,
+                      'bg-[#323238]': dayActive,
                     },
                   )}
                 >
