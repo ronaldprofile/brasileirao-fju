@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import cx from 'clsx'
 import dayjs from 'dayjs'
-
-import { generateDatesFromMonth, monthsOfYear } from '@/utils/generate-dates'
-
 import { CaretLeft, CaretRight } from '@phosphor-icons/react'
+
+import { generateDatesFromMonth } from '@/utils/generate-dates'
 
 const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const months = [
@@ -23,14 +22,14 @@ const months = [
 ]
 
 export function DatePicker() {
+  const [monthIndex, setMonthIndex] = useState(dayjs().month())
+
   const [datePickerMonth, setDatePickerMonth] = useState(
     months[dayjs().month()],
   )
 
   const [daysDatePicker, setDaysDatePicker] = useState<number[]>([])
   const [daysEmptyDatePicker, setDaysEmptyDatePicker] = useState<null[]>([])
-
-  const [monthIndex, setMonthIndex] = useState(dayjs().month())
 
   const today = dayjs()
 
@@ -58,20 +57,17 @@ export function DatePicker() {
     }
   }
 
-  const month = monthsOfYear[currentMonth]
-
   useEffect(() => {
     const updatedMonth = months[monthIndex]
     setDatePickerMonth(updatedMonth)
   }, [monthIndex])
 
   useEffect(() => {
-    const monthIndex = monthsOfYear[month]
     const { daysOfMonth: days, emptyDays } = generateDatesFromMonth(monthIndex)
 
     setDaysDatePicker(days)
     setDaysEmptyDatePicker(emptyDays)
-  }, [month, monthIndex])
+  }, [currentMonth, monthIndex])
 
   return (
     <div className="w-full p-6 border border-[#323238] rounded-md bg-[#202024]">
