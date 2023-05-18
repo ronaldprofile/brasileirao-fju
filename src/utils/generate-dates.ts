@@ -6,7 +6,7 @@ export function generateDatesFromMonth(monthIndex: number) {
   const month = today.month(monthIndex)
   const daysInMonth = month.daysInMonth()
 
-  const dayOfMonth = month.date() // 1 - 31
+  const dayOfMonth = month.month(monthIndex).date() // 1 - 31
 
   const startDay = today.month() === monthIndex ? dayOfMonth : 1
   const daysFromMonthStart = daysInMonth - (startDay - 1)
@@ -16,12 +16,5 @@ export function generateDatesFromMonth(monthIndex: number) {
     (_, i) => i + startDay,
   )
 
-  const startOfMonth = today.startOf('month').day()
-
-  const emptyDays = Array.from(
-    { length: startOfMonth + startOfMonth },
-    () => null,
-  )
-
-  return { daysOfMonth, emptyDays }
+  return { daysOfMonth }
 }

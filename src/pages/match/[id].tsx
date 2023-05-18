@@ -4,9 +4,40 @@ import { Button } from '@/components/Button'
 import { DatePicker } from '@/components/DatePicker'
 import { Input } from '@/components/Input'
 import { ArrowLeft, X } from '@phosphor-icons/react'
+import { useForm } from 'react-hook-form'
+import {
+  createConfrontationDateFormData,
+  createConfrontationDateSchema,
+  createConfrontationDateFormDataInputs,
+} from '@/schemas/match-time'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 
 export default function Match() {
+  const [dateCalendar, setDateCalendar] = useState<string | null>(null)
+
   const router = useRouter()
+
+  const { handleSubmit, register, formState, reset } =
+    useForm<createConfrontationDateFormData>({
+      resolver: zodResolver(createConfrontationDateSchema),
+    })
+
+  const { errors } = formState
+
+  async function handleCreateConfrontationDate(
+    data: createConfrontationDateFormDataInputs,
+  ) {
+    const confrontationDate = `${dateCalendar} ${data.hour}:${data.minute}:00`
+
+    console.log(confrontationDate)
+
+    reset()
+  }
+
+  function handleSelectDayCalendar(date: string) {
+    setDateCalendar(date)
+  }
 
   const confrontationDate = null
 
@@ -87,12 +118,15 @@ export default function Match() {
           </div>
 
           {!confrontationDate && (
-            <form className="mt-10 flex flex-col gap-2">
+            <form
+              onSubmit={handleSubmit(handleCreateConfrontationDate)}
+              className="mt-10 flex flex-col gap-2"
+            >
               <span className="text-sm sm:text-base text-[#e1e1e1]">
                 Escolha uma data e horário para o confronto
               </span>
 
-              <DatePicker />
+              <DatePicker onSelectDateCalendar={handleSelectDayCalendar} />
 
               <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2">
@@ -103,7 +137,8 @@ export default function Match() {
                     <Input
                       id="hour"
                       type="text"
-                      maxLength={2}
+                      error={errors.hour?.message}
+                      {...register('hour')}
                       className="text-white appearance-none"
                       placeholder="16"
                     />
@@ -117,14 +152,15 @@ export default function Match() {
                     <Input
                       id="minutes"
                       type="text"
-                      maxLength={2}
+                      error={errors.minute?.message}
+                      {...register('minute')}
                       className="text-white appearance-none"
                       placeholder="30"
                     />
                   </div>
                 </div>
 
-                <Button type="button" className="sm:self-end sm:flex-1">
+                <Button type="submit" className="sm:self-end sm:flex-1">
                   Agendar
                 </Button>
               </div>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import cx from 'clsx'
 import dayjs from 'dayjs'
 import { CaretLeft, CaretRight } from '@phosphor-icons/react'
 
 import { generateDatesFromMonth } from '@/utils/generate-dates'
+import { DatePickerDay } from './Day'
 
 const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const months = [
@@ -22,15 +22,18 @@ const months = [
   'Dezembro',
 ]
 
-export function DatePicker() {
-  const [monthIndex, setMonthIndex] = useState(dayjs().month())
+interface DatePickerProps {
+  onSelectDateCalendar: (date: string) => void
+}
+
+export function DatePicker({ onSelectDateCalendar }: DatePickerProps) {
+  const [monthIndex, setMonthIndex] = useState<number>(dayjs().month())
 
   const [datePickerMonth, setDatePickerMonth] = useState(
     months[dayjs().month()],
   )
 
   const [daysDatePicker, setDaysDatePicker] = useState<number[]>([])
-  const [daysEmptyDatePicker, setDaysEmptyDatePicker] = useState<null[]>([])
 
   const [dayDatePicker, setDayDatePicker] = useState<number | null>(null)
 
@@ -46,19 +49,15 @@ export function DatePicker() {
   function handleSelectDay(day: number) {
     setDayDatePicker(day)
 
-    const check = today.month(monthIndex).date(day)
+    const dateToCheck = today.year(datePickerYear).month(monthIndex).date(day)
 
-    let confrotantionDate = ''
+    let date = ''
 
-    if (check.month() === monthIndex) {
-      const formattedMonth = check.format('MM')
-      const formattedDayMonth = check.format('DD')
-      const dayOfWeek = check.format('dddd')
+    if (dateToCheck.month() === monthIndex) {
+      date = dateToCheck.format('YYYY-MM-DD')
 
-      confrotantionDate = `${dayOfWeek} ${formattedDayMonth}/${formattedMonth}`
+      onSelectDateCalendar(date)
     }
-
-    console.log(confrotantionDate)
   }
 
   function clearSelectDay() {
@@ -90,10 +89,9 @@ export function DatePicker() {
   }, [monthIndex])
 
   useEffect(() => {
-    const { daysOfMonth: days, emptyDays } = generateDatesFromMonth(monthIndex)
+    const { daysOfMonth: days } = generateDatesFromMonth(monthIndex)
 
     setDaysDatePicker(days)
-    setDaysEmptyDatePicker(emptyDays)
   }, [currentMonth, monthIndex])
 
   return (
@@ -151,38 +149,33 @@ export function DatePicker() {
           </div>
 
           <div className="mt-1 grid grid-cols-7 grid-flow-row gap-3">
-            {daysEmptyDatePicker.map((day) => (
-              <div key={day}></div>
-            ))}
-
             {daysDatePicker.map((day, index) => {
-              const today = dayjs().date()
+              const today = dayjs()
 
-              const dayDatePickerEmpty = !dayDatePicker
               const month = dayjs().month()
 
-              const dayActive = day === today && month === monthIndex
-
+              const dayDatePickerEmpty = !dayDatePicker
+              const currentDay = day === today.date() && month === monthIndex
               const dayDatePickerSelected = day === dayDatePicker
 
+              const dayActive = dayDatePickerEmpty
+                ? currentDay
+                : dayDatePickerSelected
+
+              const dayOfWeekIndex = dayjs().month(monthIndex).date(day).day()
+              const key = `${monthIndex}-${index}`
+
               return (
-                <motion.div
-                  key={`${monthIndex}-${index}`}
+                <DatePickerDay
+                  key={key}
+                  day={day}
+                  animationDelay={index}
+                  dayIsSelected={dayActive}
                   onClick={() => handleSelectDay(day)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ ease: 'easeIn', delay: index * 0.1 }}
-                  className={cx(
-                    'cursor-pointer flex justify-center items-center h-8 sm:h-[58px] sm:w-auto rounded-md hover:bg-[#323238] transition-colors',
-                    {
-                      'bg-[#323238]': dayDatePickerEmpty
-                        ? dayActive
-                        : dayDatePickerSelected,
-                    },
-                  )}
-                >
-                  <span className="text-white text-sm sm:text-base">{day}</span>
-                </motion.div>
+                  style={{
+                    gridColumnStart: index === 0 ? dayOfWeekIndex + 1 : '',
+                  }}
+                />
               )
             })}
           </div>
