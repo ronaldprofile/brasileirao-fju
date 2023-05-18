@@ -32,6 +32,8 @@ export function DatePicker() {
   const [daysDatePicker, setDaysDatePicker] = useState<number[]>([])
   const [daysEmptyDatePicker, setDaysEmptyDatePicker] = useState<null[]>([])
 
+  const [dayDatePicker, setDayDatePicker] = useState<number | null>(null)
+
   const today = dayjs()
 
   const currentMonth = today.month()
@@ -40,6 +42,28 @@ export function DatePicker() {
 
   const lastDayOfYear = today.endOf('year')
   const lastMonthOfYear = lastDayOfYear.month()
+
+  function handleSelectDay(day: number) {
+    setDayDatePicker(day)
+
+    const check = today.month(monthIndex).date(day)
+
+    let confrotantionDate = ''
+
+    if (check.month() === monthIndex) {
+      const formattedMonth = check.format('MM')
+      const formattedDayMonth = check.format('DD')
+      const dayOfWeek = check.format('dddd')
+
+      confrotantionDate = `${dayOfWeek} ${formattedDayMonth}/${formattedMonth}`
+    }
+
+    console.log(confrotantionDate)
+  }
+
+  function clearSelectDay() {
+    setDayDatePicker(null)
+  }
 
   const handleNextMonth = () => {
     if (monthIndex <= lastMonthOfYear) {
@@ -61,6 +85,8 @@ export function DatePicker() {
   useEffect(() => {
     const updatedMonth = months[monthIndex]
     setDatePickerMonth(updatedMonth)
+
+    clearSelectDay()
   }, [monthIndex])
 
   useEffect(() => {
@@ -77,19 +103,22 @@ export function DatePicker() {
           <div className="flex items-center gap-1">
             <motion.span
               key={monthIndex}
-              className="text-white font-medium"
+              className="text-white font-medium text-sm sm:text-base"
               initial={{ opacity: 0, translateY: -5 }}
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ delay: 0.1 }}
             >
               {datePickerMonth}
             </motion.span>
-            <span className="text-[#a9a9b2]">{datePickerYear}</span>
+            <span className="text-[#a9a9b2] text-sm sm:text-base">
+              {datePickerYear}
+            </span>
           </div>
 
           <div className="flex items-center gap-2" id="controllers">
             <button
-              className="w-10 h-10 flex justify-center items-center rounded-md hover:bg-[#323238] disabled:cursor-not-allowed"
+              type="button"
+              className="w-8 h-8 sm:w-10 sm:h-10 flex justify-center items-center rounded-md hover:bg-[#323238] disabled:cursor-not-allowed"
               onClick={handlePreviousMonth}
               disabled={monthIndex === currentMonth}
             >
@@ -97,7 +126,8 @@ export function DatePicker() {
             </button>
 
             <button
-              className="w-10 h-10 flex justify-center items-center rounded-md hover:bg-[#323238] disabled:cursor-not-allowed"
+              type="button"
+              className="w-8 h-8 sm:w-10 sm:h-10 flex justify-center items-center rounded-md hover:bg-[#323238] disabled:cursor-not-allowed"
               onClick={handleNextMonth}
               disabled={monthIndex === 11}
             >
@@ -111,7 +141,7 @@ export function DatePicker() {
             {weekDays.map((day) => {
               return (
                 <span
-                  className="text-[#A9A9B2] text-center font-medium uppercase"
+                  className="block text-[#A9A9B2] text-sm sm:text-base text-center font-medium uppercase"
                   key={day}
                 >
                   {day}
@@ -128,22 +158,30 @@ export function DatePicker() {
             {daysDatePicker.map((day, index) => {
               const today = dayjs().date()
 
-              const dayActive = day === today && dayjs().month() === monthIndex
+              const dayDatePickerEmpty = !dayDatePicker
+              const month = dayjs().month()
+
+              const dayActive = day === today && month === monthIndex
+
+              const dayDatePickerSelected = day === dayDatePicker
 
               return (
                 <motion.div
                   key={`${monthIndex}-${index}`}
+                  onClick={() => handleSelectDay(day)}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ ease: 'easeIn', delay: index * 0.1 }}
                   className={cx(
-                    'cursor-pointer flex justify-center items-center h-[58px] rounded-md hover:bg-[#323238] transition-colors',
+                    'cursor-pointer flex justify-center items-center h-8 sm:h-[58px] sm:w-auto rounded-md hover:bg-[#323238] transition-colors',
                     {
-                      'bg-[#323238]': dayActive,
+                      'bg-[#323238]': dayDatePickerEmpty
+                        ? dayActive
+                        : dayDatePickerSelected,
                     },
                   )}
                 >
-                  <span className="text-white">{day}</span>
+                  <span className="text-white text-sm sm:text-base">{day}</span>
                 </motion.div>
               )
             })}

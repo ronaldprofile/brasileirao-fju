@@ -1,7 +1,9 @@
-import { DatePicker } from '@/components/DatePicker'
-import { ArrowLeft, X } from '@phosphor-icons/react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { Button } from '@/components/Button'
+import { DatePicker } from '@/components/DatePicker'
+import { Input } from '@/components/Input'
+import { ArrowLeft, X } from '@phosphor-icons/react'
 
 export default function Match() {
   const router = useRouter()
@@ -85,9 +87,48 @@ export default function Match() {
           </div>
 
           {!confrontationDate && (
-            <div className="mt-10">
+            <form className="mt-10 flex flex-col gap-2">
+              <span className="text-sm sm:text-base text-[#e1e1e1]">
+                Escolha uma data e horário para o confronto
+              </span>
+
               <DatePicker />
-            </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[#E1E1E6] text-sm" htmlFor="hour">
+                      Horas
+                    </label>
+                    <Input
+                      id="hour"
+                      type="text"
+                      maxLength={2}
+                      className="text-white appearance-none"
+                      placeholder="16"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[#E1E1E6] text-sm" htmlFor="minutes">
+                      Minutos
+                    </label>
+
+                    <Input
+                      id="minutes"
+                      type="text"
+                      maxLength={2}
+                      className="text-white appearance-none"
+                      placeholder="30"
+                    />
+                  </div>
+                </div>
+
+                <Button type="button" className="sm:self-end sm:flex-1">
+                  Agendar
+                </Button>
+              </div>
+            </form>
           )}
         </div>
       </main>
