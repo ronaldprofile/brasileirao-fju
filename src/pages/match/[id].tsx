@@ -68,7 +68,6 @@ export default function Match() {
     data: createConfrontationDateFormDataInputs,
   ) {
     const confrontationDateFormatted = `${dateCalendar} ${data.hour}:${data.minute}:00`
-    console.log('funcao', confrontationDateFormatted)
 
     mutate(confrontationDateFormatted)
 
@@ -144,15 +143,29 @@ export default function Match() {
           <div className="w-full mt-4 max-w-[600px] mx-auto flex gap-16 justify-center items-center">
             <div className="flex" id="away_team">
               <div className="flex flex-col items-center">
-                <img
-                  className="w-12 h-12"
-                  src={awayTeamImage}
-                  alt={awayTeamName}
-                />
+                {isLoading ? (
+                  <>
+                    <Skeleton height={48} width={48} circle />
+                    <Skeleton width={80} />
+                  </>
+                ) : (
+                  <>
+                    <img
+                      className="w-12 h-12"
+                      src={awayTeamImage}
+                      alt={awayTeamName}
+                    />
 
-                <Link href={`/team/${awayTeamId}`} className="hover:underline">
-                  <span className="text-sm text-[#a9a9b2]">{awayTeamName}</span>
-                </Link>
+                    <Link
+                      href={`/team/${awayTeamId}`}
+                      className="hover:underline"
+                    >
+                      <span className="text-sm text-[#a9a9b2]">
+                        {awayTeamName}
+                      </span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
 
@@ -170,15 +183,29 @@ export default function Match() {
 
             <div className="flex" id="home_team">
               <div className="flex flex-col items-center">
-                <img
-                  className="w-12 h-12"
-                  src={homeTeamImage}
-                  alt={homeTeamName}
-                />
+                {isLoading ? (
+                  <>
+                    <Skeleton height={48} width={48} circle />
+                    <Skeleton width={80} />
+                  </>
+                ) : (
+                  <>
+                    <img
+                      className="w-12 h-12"
+                      src={homeTeamImage}
+                      alt={homeTeamName}
+                    />
 
-                <Link href={`/team/${homeTeamId}`} className="hover:underline">
-                  <span className="text-sm text-[#a9a9b2]">{homeTeamName}</span>
-                </Link>
+                    <Link
+                      href={`/team/${homeTeamId}`}
+                      className="hover:underline"
+                    >
+                      <span className="text-sm text-[#a9a9b2]">
+                        {homeTeamName}
+                      </span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
