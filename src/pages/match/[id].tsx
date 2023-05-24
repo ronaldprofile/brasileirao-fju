@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Button } from '@/components/Button'
 import { DatePicker } from '@/components/DatePicker'
 import { Input } from '@/components/Input'
-import { ArrowLeft, X } from '@phosphor-icons/react'
+import { ArrowLeft, X, ArrowDown, ArrowUp } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
 import {
   createConfrontationDateFormData,
@@ -24,12 +24,27 @@ interface PageQuery extends ParsedUrlQuery {
   id: string
 }
 
+interface TeamsScore {
+  homeTeamScore: number
+  awayTeamScore: number
+}
+
+type TeamsScoreKeys = keyof TeamsScore
+
+const INITIAL_TEAMS_SCORE: TeamsScore = {
+  awayTeamScore: 0,
+  homeTeamScore: 0,
+}
+
 export default function Match() {
   const router = useRouter()
   const { id: matchId } = router.query as PageQuery
 
   const { data, isLoading } = useGetMatchById(matchId)
+
   const [dateCalendar, setDateCalendar] = useState<string | null>(null)
+
+  const [teamsScore, setTeamsScore] = useState(INITIAL_TEAMS_SCORE)
 
   const queryClient = useQueryClient()
 
@@ -76,6 +91,38 @@ export default function Match() {
 
   function handleSelectDayCalendar(date: string) {
     setDateCalendar(date)
+  }
+
+  function handleChangeScoreTeam(
+    team: TeamsScoreKeys,
+    action: 'increment' | 'decrement',
+  ) {
+    const key = team
+
+    if (action === 'increment') {
+      handleIncremetScoreTeam(key)
+    } else {
+      handleDecremetScoreTeam(key)
+    }
+  }
+
+  function handleIncremetScoreTeam(team: TeamsScoreKeys) {
+    setTeamsScore((prevState) => ({
+      ...prevState,
+      [team]: prevState[team] + 1,
+    }))
+  }
+
+  function handleDecremetScoreTeam(team: TeamsScoreKeys) {
+    setTeamsScore((prevState) => {
+      const teamsScore = { ...prevState }
+
+      if (teamsScore[team] > 0) {
+        teamsScore[team] -= 1
+      }
+
+      return teamsScore
+    })
   }
 
   const awayTeamId = data?.confrontation.awayTeam.uuid
@@ -141,7 +188,7 @@ export default function Match() {
           </div>
 
           <div className="w-full mt-4 max-w-[600px] mx-auto flex gap-16 justify-center items-center">
-            <div className="flex" id="away_team">
+            <div className="flex gap-3" id="away_team">
               <div className="flex flex-col items-center">
                 {isLoading ? (
                   <>
@@ -167,21 +214,41 @@ export default function Match() {
                   </>
                 )}
               </div>
+
+              <div className="flex flex-col justify-between">
+                <button
+                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                  onClick={() =>
+                    handleChangeScoreTeam('awayTeamScore', 'increment')
+                  }
+                >
+                  <ArrowUp />
+                </button>
+
+                <button
+                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                  onClick={() =>
+                    handleChangeScoreTeam('awayTeamScore', 'decrement')
+                  }
+                >
+                  <ArrowDown />
+                </button>
+              </div>
             </div>
 
             <div className="flex items-center gap-4" id="score">
-              {/* <div className="flex items-center">
-                <span className="text-4xl">3</span>
-              </div> */}
+              <div className="flex items-center" id="away_team_score">
+                <span className="text-4xl">{teamsScore.awayTeamScore}</span>
+              </div>
 
               <X size={20} color="#a9a9b2" className="mx-4" />
 
-              {/* <div className="flex items-center">
-                <span className="text-4xl">3</span>
-              </div> */}
+              <div className="flex items-center" id="home_team_score">
+                <span className="text-4xl">{teamsScore.homeTeamScore}</span>
+              </div>
             </div>
 
-            <div className="flex" id="home_team">
+            <div className="flex gap-3" id="home_team">
               <div className="flex flex-col items-center">
                 {isLoading ? (
                   <>
@@ -206,6 +273,26 @@ export default function Match() {
                     </Link>
                   </>
                 )}
+              </div>
+
+              <div className="flex flex-col justify-between">
+                <button
+                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                  onClick={() =>
+                    handleChangeScoreTeam('homeTeamScore', 'increment')
+                  }
+                >
+                  <ArrowUp />
+                </button>
+
+                <button
+                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                  onClick={() =>
+                    handleChangeScoreTeam('homeTeamScore', 'decrement')
+                  }
+                >
+                  <ArrowDown />
+                </button>
               </div>
             </div>
           </div>
