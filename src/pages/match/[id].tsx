@@ -1,5 +1,5 @@
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { Button } from '@/components/Button'
 import { DatePicker } from '@/components/DatePicker'
 import { Input } from '@/components/Input'
@@ -11,12 +11,22 @@ import {
   createConfrontationDateFormDataInputs,
 } from '@/schemas/match-time'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useGetMatchById } from '@/hooks/get-match-by-id'
+import { ParsedUrlQuery } from 'querystring'
+import Link from 'next/link'
+import Skeleton from 'react-loading-skeleton'
+
+interface PageQuery extends ParsedUrlQuery {
+  id: string
+}
 
 export default function Match() {
-  const [dateCalendar, setDateCalendar] = useState<string | null>(null)
-
   const router = useRouter()
+  const { id } = router.query as PageQuery
+
+  const { data, isLoading } = useGetMatchById(id)
+
+  const [dateCalendar, setDateCalendar] = useState<string | null>(null)
 
   const { handleSubmit, register, formState, reset } =
     useForm<createConfrontationDateFormData>({
@@ -39,7 +49,16 @@ export default function Match() {
     setDateCalendar(date)
   }
 
-  const confrontationDate = null
+  const awayTeamId = data?.confrontation.awayTeam.uuid
+  const awayTeamName = data?.confrontation.awayTeam.name
+
+  const homeTeamId = data?.confrontation.homeTeam.uuid
+
+  const homeTeamName = data?.confrontation.homeTeam.name
+
+  const awayTeamImage = data?.confrontation.awayTeam.shield
+  const homeTeamImage = data?.confrontation.homeTeam.shield
+  const confrontationDate = data?.confrontation.confrontationDate ?? null
 
   return (
     <div className="w-full h-full">
@@ -51,13 +70,30 @@ export default function Match() {
               onClick={router.back}
               className="w-8 h-8 sm:w-10 sm:h-10 flex justify-center items-center hover:bg-[#323238] rounded-md"
             >
-              <ArrowLeft size={24} color="#fff" />
+              <ArrowLeft size={20} color="#fff" />
             </button>
 
             <div className="flex items-center gap-1">
-              <span className="text-white">Manchester City</span>
-              <X size={14} color="#fff" />
-              <span className="text-white">Manchester United</span>
+              {isLoading ? (
+                <>
+                  <Skeleton width={100} />
+                  <X size={14} color="#fff" />
+
+                  <Skeleton width={100} />
+                </>
+              ) : (
+                <>
+                  <span className="text-white">
+                    {data?.confrontation.awayTeam.name}
+                  </span>
+
+                  <X size={14} color="#fff" />
+
+                  <span className="text-white">
+                    {data?.confrontation.homeTeam.name}
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -66,26 +102,26 @@ export default function Match() {
       <main className="mt-6">
         <div className="w-full bg-[#202024] max-w-3xl mx-auto pt-6 pb-6 px-6">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <span className="text-sm text-[#a9a9b2]">Premier League</span>
               <div className="w-[1.5px] h-[1.5px] bg-[#a9a9b2] rounded-full"></div>
               <span className="text-sm text-[#a9a9b2]">Hoje</span>
-            </div>
+            </div> */}
 
-            <span className="text-sm text-[#a9a9b2]">Encerrado</span>
+            {/* <span className="text-sm text-[#a9a9b2]">Encerrado</span> */}
           </div>
 
           <div className="w-full mt-4 max-w-[600px] mx-auto flex gap-16 justify-center items-center">
-            <div className="flex" id="home_team">
+            <div className="flex" id="away_team">
               <div className="flex flex-col items-center">
                 <img
                   className="w-12 h-12"
-                  src="https://storage.googleapis.com/hml-fju-api-nodejs.appspot.com/teams/1683164993359.png"
-                  alt=""
+                  src={awayTeamImage}
+                  alt={awayTeamName}
                 />
 
-                <Link href={'#'} className="hover:underline">
-                  <span className="text-sm text-[#a9a9b2]">City</span>
+                <Link href={`/team/${awayTeamId}`} className="hover:underline">
+                  <span className="text-sm text-[#a9a9b2]">{awayTeamName}</span>
                 </Link>
               </div>
             </div>
@@ -102,16 +138,16 @@ export default function Match() {
               </div> */}
             </div>
 
-            <div className="flex" id="away_team">
+            <div className="flex" id="home_team">
               <div className="flex flex-col items-center">
                 <img
                   className="w-12 h-12"
-                  src="https://storage.googleapis.com/hml-fju-api-nodejs.appspot.com/teams/1682975893199.png"
-                  alt=""
+                  src={homeTeamImage}
+                  alt={homeTeamName}
                 />
 
-                <Link href={'#'} className="hover:underline">
-                  <span className="text-sm text-[#a9a9b2]">United</span>
+                <Link href={`/team/${homeTeamId}`} className="hover:underline">
+                  <span className="text-sm text-[#a9a9b2]">{homeTeamName}</span>
                 </Link>
               </div>
             </div>
