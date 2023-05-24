@@ -1,4 +1,5 @@
 import { Shield } from '@phosphor-icons/react'
+import dayjs from 'dayjs'
 
 interface Team {
   uuid: string
@@ -9,7 +10,10 @@ interface Team {
 
 interface Match {
   uuid: string
-  confrontationDate: Date | null
+  confrontationDate: {
+    _seconds: number
+  } | null
+
   homeTeam: Team
   awayTeam: Team
 
@@ -26,6 +30,14 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
+  const date = dayjs.unix(match.confrontationDate?._seconds ?? 0)
+  const formattedDate = date.format('ddd, DD/MM')
+
+  const hour = date.hour()
+  const minute = date.minute()
+
+  const matchTime = `${hour}:${minute}`
+
   return (
     <div className="sm:h-32 px-6 py-4 bg-[#202024] border border-[#323238] flex flex-col gap-4 sm:items-center sm:flex-row sm:justify-between cursor-pointer hover:bg-[#323238]/60 transition-colors">
       <div className="flex flex-col gap-1">
@@ -49,8 +61,13 @@ export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
       </div>
 
       <div className="h-full pt-3 sm:pl-4 flex flex-col items-center justify-center border-t-[1.2px] border-t-[#323238] sm:border-t-0 sm:border-l-[1.2px] sm:border-l-[#323238] ">
-        {!match.confrontationDate && (
+        {!match.confrontationDate ? (
           <span className="text-xs text-[#a9a9b2]">A confirmar</span>
+        ) : (
+          <>
+            <span className="text-xs text-[#a9a9b2]">{formattedDate}</span>
+            <span className="text-xs text-[#a9a9b2]">{matchTime}</span>
+          </>
         )}
 
         {/* {matchClosed ? (

@@ -11,7 +11,10 @@ interface Team {
 
 interface Matche {
   uuid: string
-  confrontationDate: Date | null
+  confrontationDate: {
+    _seconds: number
+  } | null
+
   homeTeam: Team
   awayTeam: Team
 
