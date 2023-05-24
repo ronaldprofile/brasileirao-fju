@@ -152,10 +152,10 @@ export default function Match() {
             <div className="flex items-center gap-1">
               {isLoading ? (
                 <>
-                  <Skeleton width={100} />
+                  <Skeleton width={100} height={24} />
                   <X size={14} color="#fff" />
 
-                  <Skeleton width={100} />
+                  <Skeleton width={100} height={24} />
                 </>
               ) : (
                 <>
@@ -215,37 +215,43 @@ export default function Match() {
                 )}
               </div>
 
-              <div className="flex flex-col justify-between">
-                <button
-                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                  onClick={() =>
-                    handleChangeScoreTeam('awayTeamScore', 'increment')
-                  }
-                >
-                  <ArrowUp />
-                </button>
+              {confrontationDate && (
+                <div className="flex flex-col justify-between">
+                  <button
+                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                    onClick={() =>
+                      handleChangeScoreTeam('awayTeamScore', 'increment')
+                    }
+                  >
+                    <ArrowUp />
+                  </button>
 
-                <button
-                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                  onClick={() =>
-                    handleChangeScoreTeam('awayTeamScore', 'decrement')
-                  }
-                >
-                  <ArrowDown />
-                </button>
-              </div>
+                  <button
+                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                    onClick={() =>
+                      handleChangeScoreTeam('awayTeamScore', 'decrement')
+                    }
+                  >
+                    <ArrowDown />
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-4" id="score">
-              <div className="flex items-center" id="away_team_score">
-                <span className="text-4xl">{teamsScore.awayTeamScore}</span>
-              </div>
+              {confrontationDate && (
+                <div className="flex items-center" id="away_team_score">
+                  <span className="text-4xl">{teamsScore.awayTeamScore}</span>
+                </div>
+              )}
 
               <X size={20} color="#a9a9b2" className="mx-4" />
 
-              <div className="flex items-center" id="home_team_score">
-                <span className="text-4xl">{teamsScore.homeTeamScore}</span>
-              </div>
+              {confrontationDate && (
+                <div className="flex items-center" id="home_team_score">
+                  <span className="text-4xl">{teamsScore.homeTeamScore}</span>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-3" id="home_team">
@@ -275,25 +281,27 @@ export default function Match() {
                 )}
               </div>
 
-              <div className="flex flex-col justify-between">
-                <button
-                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                  onClick={() =>
-                    handleChangeScoreTeam('homeTeamScore', 'increment')
-                  }
-                >
-                  <ArrowUp />
-                </button>
+              {confrontationDate && (
+                <div className="flex flex-col justify-between">
+                  <button
+                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                    onClick={() =>
+                      handleChangeScoreTeam('homeTeamScore', 'increment')
+                    }
+                  >
+                    <ArrowUp />
+                  </button>
 
-                <button
-                  className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                  onClick={() =>
-                    handleChangeScoreTeam('homeTeamScore', 'decrement')
-                  }
-                >
-                  <ArrowDown />
-                </button>
-              </div>
+                  <button
+                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                    onClick={() =>
+                      handleChangeScoreTeam('homeTeamScore', 'decrement')
+                    }
+                  >
+                    <ArrowDown />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
