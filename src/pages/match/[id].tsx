@@ -15,6 +15,10 @@ import { useGetMatchById } from '@/hooks/get-match-by-id'
 import { ParsedUrlQuery } from 'querystring'
 import Link from 'next/link'
 import Skeleton from 'react-loading-skeleton'
+import { api } from '@/lib/axios'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
 interface PageQuery extends ParsedUrlQuery {
   id: string
@@ -22,11 +26,36 @@ interface PageQuery extends ParsedUrlQuery {
 
 export default function Match() {
   const router = useRouter()
-  const { id } = router.query as PageQuery
+  const { id: matchId } = router.query as PageQuery
 
-  const { data, isLoading } = useGetMatchById(id)
-
+  const { data, isLoading } = useGetMatchById(matchId)
   const [dateCalendar, setDateCalendar] = useState<string | null>(null)
+
+  const queryClient = useQueryClient()
+
+  const { mutate, isLoading: mutationLoading } = useMutation(
+    async (matchDate: string) => await handleSaveMatchDate(matchDate),
+    {
+      onError: () => {
+        toast.error('Algo deu errado')
+      },
+
+      onSuccess: () => {
+        queryClient.invalidateQueries(['match', matchId])
+        toast.success('Data do confronto salva')
+      },
+    },
+  )
+
+  async function handleSaveMatchDate(matchDate: string) {
+    const id = getChampionshipIdCookie()
+
+    await api.put(`/confrontations/update/${matchId}`, {
+      championshipId: id,
+      roundId: '',
+      confrontationDate: matchDate,
+    })
+  }
 
   const { handleSubmit, register, formState, reset } =
     useForm<createConfrontationDateFormData>({
@@ -38,9 +67,10 @@ export default function Match() {
   async function handleCreateConfrontationDate(
     data: createConfrontationDateFormDataInputs,
   ) {
-    const confrontationDate = `${dateCalendar} ${data.hour}:${data.minute}:00`
+    const confrontationDateFormatted = `${dateCalendar} ${data.hour}:${data.minute}:00`
+    console.log('funcao', confrontationDateFormatted)
 
-    console.log(confrontationDate)
+    mutate(confrontationDateFormatted)
 
     reset()
   }
@@ -165,8 +195,8 @@ export default function Match() {
               <DatePicker onSelectDateCalendar={handleSelectDayCalendar} />
 
               <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-2">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <div className="flex flex-col gap-1">
+                <div className="h-24 flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div className="h-full flex flex-col gap-1">
                     <label className="text-[#E1E1E6] text-sm" htmlFor="hour">
                       Horas
                     </label>
@@ -180,7 +210,7 @@ export default function Match() {
                     />
                   </div>
 
-                  <div className="flex flex-col gap-1">
+                  <div className="h-full flex flex-col gap-1">
                     <label className="text-[#E1E1E6] text-sm" htmlFor="minutes">
                       Minutos
                     </label>
@@ -196,8 +226,8 @@ export default function Match() {
                   </div>
                 </div>
 
-                <Button type="submit" className="sm:self-end sm:flex-1">
-                  Agendar
+                <Button type="submit" className={'sm:flex-1'}>
+                  {mutationLoading ? 'Agendando...' : 'Agendar'}
                 </Button>
               </div>
             </form>

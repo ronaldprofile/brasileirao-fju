@@ -1,6 +1,12 @@
 import { Shield } from '@phosphor-icons/react'
 import dayjs from 'dayjs'
 
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
 interface Team {
   uuid: string
   name: string
@@ -10,9 +16,7 @@ interface Team {
 
 interface Match {
   uuid: string
-  confrontationDate: {
-    _seconds: number
-  } | null
+  confrontationDate: string | null
 
   homeTeam: Team
   awayTeam: Team
@@ -30,7 +34,7 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, matchClosed = false }: MatchCardProps) {
-  const date = dayjs.unix(match.confrontationDate?._seconds ?? 0)
+  const date = dayjs(match.confrontationDate).tz('America/Sao_Paulo')
   const formattedDate = date.format('ddd, DD/MM')
 
   const hour = date.hour()

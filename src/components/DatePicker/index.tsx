@@ -34,7 +34,6 @@ export function DatePicker({ onSelectDateCalendar }: DatePickerProps) {
   )
 
   const [daysDatePicker, setDaysDatePicker] = useState<number[]>([])
-
   const [dayDatePicker, setDayDatePicker] = useState<number | null>(null)
 
   const today = dayjs()
@@ -93,6 +92,31 @@ export function DatePicker({ onSelectDateCalendar }: DatePickerProps) {
 
     setDaysDatePicker(days)
   }, [currentMonth, monthIndex])
+
+  useEffect(() => {
+    const month = dayjs().month()
+
+    if (today.date() && month === monthIndex) {
+      setDayDatePicker(today.date())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const dateToCheck = today
+      .year(datePickerYear)
+      .month(monthIndex)
+      .date(today.date())
+
+    let date = ''
+
+    if (dateToCheck.month() === monthIndex) {
+      date = dateToCheck.format('YYYY-MM-DD')
+
+      onSelectDateCalendar(date)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="w-full p-6 border border-[#323238] rounded-md bg-[#202024]">
