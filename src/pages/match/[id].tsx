@@ -305,7 +305,7 @@ export default function Match() {
             </div>
           </div>
 
-          {!confrontationDate && (
+          {!isLoading && !confrontationDate && (
             <form
               onSubmit={handleSubmit(handleCreateConfrontationDate)}
               className="mt-10 flex flex-col gap-2"
