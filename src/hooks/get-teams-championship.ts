@@ -1,3 +1,4 @@
+import { Statitic } from '@/@types'
 import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
@@ -7,6 +8,8 @@ interface Team {
   name: string
   acronym: string
   shield: string
+
+  statistics: Statitic
 }
 
 interface GetTeamParams {

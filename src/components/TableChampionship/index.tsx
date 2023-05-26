@@ -1,3 +1,4 @@
+import { Statitic } from '@/@types'
 import Link from 'next/link'
 
 interface Team {
@@ -5,6 +6,8 @@ interface Team {
   name: string
   acronym: string
   shield: string
+
+  statistics: Statitic
 }
 
 interface TableChampionshipProps {
@@ -49,14 +52,30 @@ export function TableChampionship({ teams }: TableChampionshipProps) {
                   <span className="ml-2">{team.name}</span>
                 </Link>
               </td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="text-sm text-center text-[#A9A9B2]">0</td>
-              <td className="pr-1 text-sm text-center text-[#A9A9B2]">0</td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.points}
+              </td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.matchesPlayed ?? 0}
+              </td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.victories}
+              </td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.draws}
+              </td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.loses}
+              </td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.goalsScored}
+              </td>
+              <td className="text-sm text-center text-[#A9A9B2]">
+                {team.statistics.goalsConceded}
+              </td>
+              <td className="pr-1 text-sm text-center text-[#A9A9B2]">
+                {team.statistics.goalDifference}
+              </td>
             </tr>
           )
         })}
