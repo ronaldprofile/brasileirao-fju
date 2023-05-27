@@ -183,6 +183,13 @@ export default function Match() {
     }
   }, [teamsScoreEmpty])
 
+  useEffect(() => {
+    setTeamsScore({
+      awayTeamScore: data?.confrontation.awayScore ?? 0,
+      homeTeamScore: data?.confrontation.homeScore ?? 0,
+    })
+  }, [data?.confrontation])
+
   return (
     <div className="w-full h-full">
       <header className="w-full bg-[#202024] border-b border-b-[#323238]">
