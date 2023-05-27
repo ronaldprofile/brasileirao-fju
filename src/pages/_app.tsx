@@ -2,8 +2,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@/styles/globals.css'
 
-import dayjs from 'dayjs'
-import 'dayjs/locale/pt-br'
+import '../lib/dayjs'
 
 import { ToastContainer } from 'react-toastify'
 import { SkeletonTheme } from 'react-loading-skeleton'
@@ -15,8 +14,6 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { queryClient } from '@/lib/query-client'
 import { ChampionshipProvider } from '@/context/Championship'
-
-dayjs.locale('pt-br')
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],

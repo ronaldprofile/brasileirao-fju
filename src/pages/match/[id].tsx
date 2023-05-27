@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button } from '@/components/Button'
 import { DatePicker } from '@/components/DatePicker'
@@ -19,6 +19,7 @@ import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
+import dayjs from 'dayjs'
 
 interface PageQuery extends ParsedUrlQuery {
   id: string
@@ -31,11 +32,6 @@ interface TeamsScore {
 
 type TeamsScoreKeys = keyof TeamsScore
 
-const INITIAL_TEAMS_SCORE: TeamsScore = {
-  awayTeamScore: 0,
-  homeTeamScore: 0,
-}
-
 export default function Match() {
   const router = useRouter()
   const { id: matchId } = router.query as PageQuery
@@ -44,30 +40,46 @@ export default function Match() {
 
   const [dateCalendar, setDateCalendar] = useState<string | null>(null)
 
-  const [teamsScore, setTeamsScore] = useState(INITIAL_TEAMS_SCORE)
+  const [teamsScore, setTeamsScore] = useState<TeamsScore>({
+    awayTeamScore: data?.confrontation.awayScore ?? 0,
+    homeTeamScore: data?.confrontation.homeScore ?? 0,
+  })
 
+  const [buttonMatchEnd, setButtonMatchEnd] = useState(true)
   const queryClient = useQueryClient()
 
-  const { mutate, isLoading: mutationLoading } = useMutation(
-    async (matchDate: string) => await handleSaveMatchDate(matchDate),
-    {
+  const { mutate: mutateSaveMatchDate, isLoading: mutationLoading } =
+    useMutation(
+      async (matchDate: string) => await handleSaveMatchDate(matchDate),
+      {
+        onError: () => {
+          toast.error('Algo deu errado')
+        },
+
+        onSuccess: () => {
+          queryClient.invalidateQueries(['match', matchId])
+          toast.success('Data do confronto salva')
+        },
+      },
+    )
+
+  const { mutate: mutateMatchEnd, isLoading: mutationMatchEndLoading } =
+    useMutation(async () => await handleMatchEnd(), {
       onError: () => {
         toast.error('Algo deu errado')
       },
 
       onSuccess: () => {
         queryClient.invalidateQueries(['match', matchId])
-        toast.success('Data do confronto salva')
+        toast.success('Jogo encerrado')
       },
-    },
-  )
+    })
 
   async function handleSaveMatchDate(matchDate: string) {
     const id = getChampionshipIdCookie()
 
     await api.put(`/confrontations/update/${matchId}`, {
       championshipId: id,
-      roundId: '',
       confrontationDate: matchDate,
     })
   }
@@ -84,9 +96,26 @@ export default function Match() {
   ) {
     const confrontationDateFormatted = `${dateCalendar} ${data.hour}:${data.minute}:00`
 
-    mutate(confrontationDateFormatted)
+    mutateSaveMatchDate(confrontationDateFormatted)
 
     reset()
+  }
+
+  const { awayTeamScore, homeTeamScore } = teamsScore
+  const teamsScoreEmpty = awayTeamScore === 0 && homeTeamScore === 0
+
+  async function handleMatchEnd() {
+    if (teamsScoreEmpty) {
+      return
+    }
+
+    const id = getChampionshipIdCookie()
+
+    await api.put(`/confrontations/update/${matchId}`, {
+      championshipId: id,
+      awayScore: awayTeamScore,
+      homeScore: homeTeamScore,
+    })
   }
 
   function handleSelectDayCalendar(date: string) {
@@ -135,6 +164,24 @@ export default function Match() {
   const awayTeamImage = data?.confrontation.awayTeam.shield
   const homeTeamImage = data?.confrontation.homeTeam.shield
   const confrontationDate = data?.confrontation.confrontationDate ?? null
+  const confrontationAlreadyHappened =
+    data?.confrontation.confrontationAlreadyHappened
+
+  const matchEndsAtDate = dayjs(data?.confrontation?.matchEndsAt ?? '').format(
+    'ddd, DD/MM',
+  )
+
+  const today = dayjs()
+
+  const matchAlreadyStarted = today.isAfter(confrontationDate)
+
+  useEffect(() => {
+    if (!teamsScoreEmpty) {
+      setButtonMatchEnd(false)
+    } else {
+      setButtonMatchEnd(true)
+    }
+  }, [teamsScoreEmpty])
 
   return (
     <div className="w-full h-full">
@@ -177,132 +224,158 @@ export default function Match() {
 
       <main className="mt-6">
         <div className="w-full bg-[#202024] max-w-3xl mx-auto pt-6 pb-6 px-6">
-          <div className="flex justify-between items-center">
-            {/* <div className="flex items-center gap-2">
-              <span className="text-sm text-[#a9a9b2]">Premier League</span>
-              <div className="w-[1.5px] h-[1.5px] bg-[#a9a9b2] rounded-full"></div>
-              <span className="text-sm text-[#a9a9b2]">Hoje</span>
-            </div> */}
+          <div className="flex items-center">
+            <div className="flex items-center gap-2">
+              {confrontationAlreadyHappened && (
+                <>
+                  <span className="text-sm text-[#a9a9b2]">Encerrado</span>
+                  <div className="w-[1.5px] h-[1.5px] bg-[#a9a9b2] rounded-full"></div>
 
-            {/* <span className="text-sm text-[#a9a9b2]">Encerrado</span> */}
+                  <span className="text-sm text-[#a9a9b2] capitalize">
+                    {matchEndsAtDate}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="w-full mt-4 max-w-[600px] mx-auto flex gap-16 justify-center items-center">
-            <div className="flex gap-3" id="away_team">
-              <div className="flex flex-col items-center">
-                {isLoading ? (
-                  <>
-                    <Skeleton height={48} width={48} circle />
-                    <Skeleton width={80} />
-                  </>
-                ) : (
-                  <>
-                    <img
-                      className="w-12 h-12"
-                      src={awayTeamImage}
-                      alt={awayTeamName}
-                    />
+          <div className="w-full mt-4 max-w-[600px] mx-auto flex flex-col gap-2">
+            <div className="flex justify-between items-center">
+              <div className="flex gap-3" id="away_team">
+                <div className="flex flex-col items-center">
+                  {isLoading ? (
+                    <>
+                      <Skeleton height={48} width={48} circle />
+                      <Skeleton width={80} />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        className="w-12 h-12"
+                        src={awayTeamImage}
+                        alt={awayTeamName}
+                      />
 
-                    <Link
-                      href={`/team/${awayTeamId}`}
-                      className="hover:underline"
-                    >
-                      <span className="text-sm text-[#a9a9b2]">
-                        {awayTeamName}
-                      </span>
-                    </Link>
-                  </>
+                      <Link
+                        href={`/team/${awayTeamId}`}
+                        className="hover:underline"
+                      >
+                        <span className="text-sm text-[#a9a9b2]">
+                          {awayTeamName}
+                        </span>
+                      </Link>
+                    </>
+                  )}
+                </div>
+
+                {confrontationDate &&
+                  matchAlreadyStarted &&
+                  !confrontationAlreadyHappened && (
+                    <div className="flex flex-col justify-between">
+                      <button
+                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                        onClick={() =>
+                          handleChangeScoreTeam('awayTeamScore', 'increment')
+                        }
+                      >
+                        <ArrowUp />
+                      </button>
+
+                      <button
+                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                        onClick={() =>
+                          handleChangeScoreTeam('awayTeamScore', 'decrement')
+                        }
+                      >
+                        <ArrowDown />
+                      </button>
+                    </div>
+                  )}
+              </div>
+
+              <div className="flex items-center gap-4" id="score">
+                {!isLoading && confrontationDate && (
+                  <div className="flex items-center" id="away_team_score">
+                    <span className="text-4xl">{teamsScore.awayTeamScore}</span>
+                  </div>
+                )}
+
+                <X size={20} color="#a9a9b2" className="mx-4" />
+
+                {!isLoading && confrontationDate && (
+                  <div className="flex items-center" id="home_team_score">
+                    <span className="text-4xl">{teamsScore.homeTeamScore}</span>
+                  </div>
                 )}
               </div>
 
-              {confrontationDate && (
-                <div className="flex flex-col justify-between">
-                  <button
-                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                    onClick={() =>
-                      handleChangeScoreTeam('awayTeamScore', 'increment')
-                    }
-                  >
-                    <ArrowUp />
-                  </button>
+              <div className="flex gap-3" id="home_team">
+                <div className="flex flex-col items-center">
+                  {isLoading ? (
+                    <>
+                      <Skeleton height={48} width={48} circle />
+                      <Skeleton width={80} />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        className="w-12 h-12"
+                        src={homeTeamImage}
+                        alt={homeTeamName}
+                      />
 
-                  <button
-                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                    onClick={() =>
-                      handleChangeScoreTeam('awayTeamScore', 'decrement')
-                    }
-                  >
-                    <ArrowDown />
-                  </button>
+                      <Link
+                        href={`/team/${homeTeamId}`}
+                        className="hover:underline"
+                      >
+                        <span className="text-sm text-[#a9a9b2]">
+                          {homeTeamName}
+                        </span>
+                      </Link>
+                    </>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <div className="flex items-center gap-4" id="score">
-              {confrontationDate && (
-                <div className="flex items-center" id="away_team_score">
-                  <span className="text-4xl">{teamsScore.awayTeamScore}</span>
-                </div>
-              )}
+                {confrontationDate &&
+                  matchAlreadyStarted &&
+                  !confrontationAlreadyHappened && (
+                    <div className="flex flex-col justify-between">
+                      <button
+                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                        onClick={() =>
+                          handleChangeScoreTeam('homeTeamScore', 'increment')
+                        }
+                      >
+                        <ArrowUp />
+                      </button>
 
-              <X size={20} color="#a9a9b2" className="mx-4" />
-
-              {confrontationDate && (
-                <div className="flex items-center" id="home_team_score">
-                  <span className="text-4xl">{teamsScore.homeTeamScore}</span>
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-3" id="home_team">
-              <div className="flex flex-col items-center">
-                {isLoading ? (
-                  <>
-                    <Skeleton height={48} width={48} circle />
-                    <Skeleton width={80} />
-                  </>
-                ) : (
-                  <>
-                    <img
-                      className="w-12 h-12"
-                      src={homeTeamImage}
-                      alt={homeTeamName}
-                    />
-
-                    <Link
-                      href={`/team/${homeTeamId}`}
-                      className="hover:underline"
-                    >
-                      <span className="text-sm text-[#a9a9b2]">
-                        {homeTeamName}
-                      </span>
-                    </Link>
-                  </>
-                )}
+                      <button
+                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                        onClick={() =>
+                          handleChangeScoreTeam('homeTeamScore', 'decrement')
+                        }
+                      >
+                        <ArrowDown />
+                      </button>
+                    </div>
+                  )}
               </div>
-
-              {confrontationDate && (
-                <div className="flex flex-col justify-between">
-                  <button
-                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                    onClick={() =>
-                      handleChangeScoreTeam('homeTeamScore', 'increment')
-                    }
-                  >
-                    <ArrowUp />
-                  </button>
-
-                  <button
-                    className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                    onClick={() =>
-                      handleChangeScoreTeam('homeTeamScore', 'decrement')
-                    }
-                  >
-                    <ArrowDown />
-                  </button>
-                </div>
-              )}
             </div>
+
+            {!isLoading &&
+              confrontationDate &&
+              matchAlreadyStarted &&
+              !confrontationAlreadyHappened && (
+                <Button
+                  type="button"
+                  onClick={() => mutateMatchEnd()}
+                  disabled={buttonMatchEnd}
+                >
+                  {mutationMatchEndLoading
+                    ? 'Encerrando...'
+                    : 'Encerrar partida'}
+                </Button>
+              )}
           </div>
 
           {!isLoading && !confrontationDate && (

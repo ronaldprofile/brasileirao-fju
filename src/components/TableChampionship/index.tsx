@@ -1,4 +1,5 @@
 import { Statitic } from '@/@types'
+import cx from 'clsx'
 import Link from 'next/link'
 
 interface Team {
@@ -33,14 +34,20 @@ export function TableChampionship({ teams }: TableChampionshipProps) {
         </tr>
       </thead>
 
-      <tbody className="divide-y divide-[#323238]">
+      <tbody className="">
         {teams?.map((team, index) => {
           const position = index + 1
+
+          const topFour = teams.slice(0, 2).includes(team)
+          const lastFour = teams.slice(-2).includes(team)
 
           return (
             <tr
               key={team.uuid}
-              className="h-10 hover:bg-[#323238] transition-colors"
+              className={cx('h-10 hover:bg-[#323238] transition-colors', {
+                'border-l-[3px] border-l-blue-500': topFour,
+                'border-l-[3px] border-l-red-500': lastFour,
+              })}
             >
               <td className="h-10 pl-4 text-sm text-[#A9A9B2]">
                 <Link
@@ -56,7 +63,7 @@ export function TableChampionship({ teams }: TableChampionshipProps) {
                 {team.statistics.points}
               </td>
               <td className="text-sm text-center text-[#A9A9B2]">
-                {team.statistics.matchesPlayed ?? 0}
+                {team.statistics.matchesPlayed}
               </td>
               <td className="text-sm text-center text-[#A9A9B2]">
                 {team.statistics.victories}

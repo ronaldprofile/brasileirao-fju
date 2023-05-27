@@ -21,6 +21,10 @@ interface Matche {
 
   championshipId: string
   roundId: string
+
+  matchEndsAt: string | null
+
+  confrontationAlreadyHappened: boolean
 }
 
 async function getMatchById(uuid: string) {
