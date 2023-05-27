@@ -11,6 +11,7 @@ import { Button } from '@/components/Button'
 import { toast } from 'react-toastify'
 import { api } from '@/lib/axios'
 import cx from 'clsx'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 
 interface Option {
   value: string
@@ -66,10 +67,13 @@ export default function PlayerProfile() {
   )
 
   async function handleLinkPlayerToTeam(teamId: string) {
+    const id = getChampionshipIdCookie()
+
     try {
       const data = {
         ...playerData?.player,
         teamId,
+        championshipId: id,
       }
 
       await api.put(`/players/update/${playerId}`, data)

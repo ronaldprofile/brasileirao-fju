@@ -16,6 +16,7 @@ import {
 } from '@/schemas/player'
 
 import { ViewPhotoPreview } from '@/components/ViewPhotoPreview'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 
 export default function Player() {
   const { register, watch, reset, resetField, handleSubmit, formState } =
@@ -26,11 +27,14 @@ export default function Player() {
   const { errors, isSubmitting } = formState
 
   async function handleCreatePlayer(data: createPlayerFormDataInputs) {
+    const id = getChampionshipIdCookie()
+
     const createPlayer = {
       name: data.name,
       nickname: data.surname,
       shirtNumber: data.shirt,
       avatar: data.avatar,
+      championshipId: id,
     }
 
     try {

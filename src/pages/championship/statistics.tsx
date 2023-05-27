@@ -4,7 +4,9 @@ import { usePlayers } from '@/hooks/get-players-championship'
 export default function Statistics() {
   const { data } = usePlayers()
 
-  const formattedListPlayers = data?.players.filter((player) => player.team)
+  const filteredPlayers = data?.players.filter(
+    (player) => player.team && player.statistics.goalsScored > 0,
+  )
 
   return (
     <ChampionshipLayout>
@@ -17,7 +19,7 @@ export default function Statistics() {
         </div>
 
         <div className="divide-y divide-[#323238]">
-          {formattedListPlayers?.map((player, index) => (
+          {filteredPlayers?.map((player, index) => (
             <div
               key={player.uuid}
               className="py-2 flex items-center justify-between"
@@ -42,7 +44,7 @@ export default function Statistics() {
                 </div>
               </div>
 
-              <span>30</span>
+              <span>{player.statistics.goalsScored}</span>
             </div>
           ))}
         </div>

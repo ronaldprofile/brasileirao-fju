@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
 
 interface Team {
@@ -14,10 +15,18 @@ interface Player {
   avatar: string
 
   team: Team | null
+
+  statistics: {
+    goalsScored: number
+    championshipId: string
+  }
 }
 
 async function getPlayersChampionship() {
-  const response = await api.get<{ data: Player[] }>('/players')
+  const id = getChampionshipIdCookie()
+  const response = await api.get<{ data: Player[] }>(
+    `/players/?championshipId=${id}`,
+  )
 
   const { data: players } = response.data
 
