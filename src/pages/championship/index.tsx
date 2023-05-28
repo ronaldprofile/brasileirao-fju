@@ -77,7 +77,7 @@ export default function Championship() {
           </div>
 
           <div className="mt-6">
-            <div className="grid grid-cols-2 gap-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
               {isLoadingMatches ? (
                 <>
                   {Array.from({ length: matchesTotal }).map((_, index) => {

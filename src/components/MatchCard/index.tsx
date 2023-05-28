@@ -46,22 +46,26 @@ export function MatchCard({ match }: MatchCardProps) {
   const matchEndsAt = match.matchEndsAt
   const matchEndsAtFormatted = dayjs(matchEndsAt).format('ddd, DD/MM')
 
-  const homeScore = +match.homeScore
   const awayScore = +match.awayScore
+  const homeScore = +match.homeScore
+
+  const homeTeamName = match.homeTeam.name
+  const awayTeamName = match.awayTeam.name
 
   const homeTeamWinner = homeScore > awayScore && homeScore !== awayScore
 
   return (
-    <div className="sm:h-32 px-6 py-4 bg-[#202024] border border-[#323238] flex flex-col gap-4 sm:items-center sm:flex-row sm:justify-between cursor-pointer hover:bg-[#323238]/60 transition-colors">
+    <div className="sm:h-32 px-6 py-4 bg-[#202024] border border-[#323238] flex gap-4 items-center justify-between cursor-pointer hover:bg-[#323238]/60 transition-colors">
       <div className="w-full flex flex-col gap-1">
-        <span className="flex items-center gap-3 text-sm text-[#a9a9b2]">
+        <div className="flex items-center gap-3 text-sm text-[#a9a9b2]">
           {match.homeTeam.shield ? (
             <img src={match.homeTeam.shield} alt="" className="w-6" />
           ) : (
             <Shield size={24} />
           )}
-          {match.homeTeam.name}
-        </span>
+
+          <span>{homeTeamName}</span>
+        </div>
 
         <span className="flex items-center gap-3 text-sm text-[#a9a9b2]">
           {match.awayTeam.shield ? (
@@ -69,7 +73,7 @@ export function MatchCard({ match }: MatchCardProps) {
           ) : (
             <Shield size={24} />
           )}
-          {match.awayTeam.name}
+          {awayTeamName}
         </span>
       </div>
 
@@ -95,7 +99,7 @@ export function MatchCard({ match }: MatchCardProps) {
         </div>
       )}
 
-      <div className="max-w-[78px] w-full h-full pt-3 sm:pl-4 flex flex-col items-center justify-center border-t-[1.2px] border-t-[#323238] sm:border-t-0 sm:border-l-[1.2px] sm:border-l-[#323238] ">
+      <div className="max-w-[78px] w-full h-11 sm:h-full pt-3 pl-4 flex flex-col items-center justify-center border-l-[1.2px] border-l-[#323238] ">
         {!match.confrontationDate ? (
           <span className="text-xs text-[#a9a9b2]">A confirmar</span>
         ) : (
