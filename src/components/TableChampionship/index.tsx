@@ -71,7 +71,7 @@ export function TableChampionship({
               sg
             </th>
 
-            <th className="pr-1 max-w-[120px] uppercase text-center text-[#a9a9b2] text-xs">
+            <th className="pr-1 w-[110px] uppercase text-center text-[#a9a9b2] text-xs">
               Últimas 5
             </th>
           </tr>
