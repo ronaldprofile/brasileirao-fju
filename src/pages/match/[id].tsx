@@ -10,6 +10,8 @@ import {
   ArrowUp,
   SoccerBall,
 } from '@phosphor-icons/react'
+
+import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import {
   createConfrontationDateFormData,
@@ -25,35 +27,25 @@ import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import dayjs from 'dayjs'
+import { useScoreTeams } from '@/hooks/use-score-teams'
+import { ScoreButton } from '@/components/ScoreButton'
 
 interface PageQuery extends ParsedUrlQuery {
   id: string
 }
-
-interface TeamsScore {
-  homeTeamScore: number
-  awayTeamScore: number
-}
-
-type TeamsScoreKeys = keyof TeamsScore
 
 export default function Match() {
   const router = useRouter()
   const { id: matchId } = router.query as PageQuery
 
   const { data, isLoading } = useGetMatchById(matchId)
-
   const [dateCalendar, setDateCalendar] = useState<string | null>(null)
 
-  const [teamsScore, setTeamsScore] = useState<TeamsScore>({
-    awayTeamScore: data?.confrontation.awayScore ?? 0,
-    homeTeamScore: data?.confrontation.homeScore ?? 0,
-  })
-
+  const { teamsScore, handleChangeScoreTeam, handleUpdateScoreTeams } =
+    useScoreTeams()
   const [buttonMatchEnd, setButtonMatchEnd] = useState(true)
-  const queryClient = useQueryClient()
 
+  const queryClient = useQueryClient()
   const { mutate: mutateSaveMatchDate, isLoading: mutationLoading } =
     useMutation(
       async (matchDate: string) => await handleSaveMatchDate(matchDate),
@@ -128,38 +120,6 @@ export default function Match() {
     setDateCalendar(date)
   }
 
-  function handleChangeScoreTeam(
-    team: TeamsScoreKeys,
-    action: 'increment' | 'decrement',
-  ) {
-    const key = team
-
-    if (action === 'increment') {
-      handleIncremetScoreTeam(key)
-    } else {
-      handleDecremetScoreTeam(key)
-    }
-  }
-
-  function handleIncremetScoreTeam(team: TeamsScoreKeys) {
-    setTeamsScore((prevState) => ({
-      ...prevState,
-      [team]: prevState[team] + 1,
-    }))
-  }
-
-  function handleDecremetScoreTeam(team: TeamsScoreKeys) {
-    setTeamsScore((prevState) => {
-      const teamsScore = { ...prevState }
-
-      if (teamsScore[team] > 0) {
-        teamsScore[team] -= 1
-      }
-
-      return teamsScore
-    })
-  }
-
   const awayTeamId = data?.confrontation.awayTeam.uuid
   const awayTeamName = data?.confrontation.awayTeam.name
   const awayTeamImage = data?.confrontation.awayTeam.shield
@@ -179,6 +139,12 @@ export default function Match() {
   const today = dayjs()
   const matchAlreadyStarted = today.isAfter(confrontationDate)
 
+  const showButtonMatchEnd =
+    confrontationDate && matchAlreadyStarted && !confrontationAlreadyHappened
+
+  const showButtonChangeTeamScore =
+    confrontationDate && matchAlreadyStarted && !confrontationAlreadyHappened
+
   useEffect(() => {
     if (!teamsScoreEmpty) {
       setButtonMatchEnd(false)
@@ -188,10 +154,13 @@ export default function Match() {
   }, [teamsScoreEmpty])
 
   useEffect(() => {
-    setTeamsScore({
+    const newTeamsScore = {
       awayTeamScore: data?.confrontation.awayScore ?? 0,
       homeTeamScore: data?.confrontation.homeScore ?? 0,
-    })
+    }
+
+    handleUpdateScoreTeams(newTeamsScore)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.confrontation])
 
   return (
@@ -217,15 +186,11 @@ export default function Match() {
                 </>
               ) : (
                 <>
-                  <span className="text-white">
-                    {data?.confrontation.awayTeam.name}
-                  </span>
+                  <span className="text-white">{homeTeamName}</span>
 
                   <X size={14} color="#fff" />
 
-                  <span className="text-white">
-                    {data?.confrontation.homeTeam.name}
-                  </span>
+                  <span className="text-white">{awayTeamName}</span>
                 </>
               )}
             </div>
@@ -279,43 +244,39 @@ export default function Match() {
                   )}
                 </div>
 
-                {confrontationDate &&
-                  matchAlreadyStarted &&
-                  !confrontationAlreadyHappened && (
-                    <div className="flex flex-col justify-between">
-                      <button
-                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                        onClick={() =>
-                          handleChangeScoreTeam('homeTeamScore', 'increment')
-                        }
-                      >
-                        <ArrowUp />
-                      </button>
+                {showButtonChangeTeamScore && (
+                  <div className="flex flex-col justify-between">
+                    <ScoreButton
+                      onClick={() =>
+                        handleChangeScoreTeam('homeTeamScore', 'increment')
+                      }
+                    >
+                      <ArrowUp />
+                    </ScoreButton>
 
-                      <button
-                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                        onClick={() =>
-                          handleChangeScoreTeam('homeTeamScore', 'decrement')
-                        }
-                      >
-                        <ArrowDown />
-                      </button>
-                    </div>
-                  )}
+                    <ScoreButton
+                      onClick={() =>
+                        handleChangeScoreTeam('homeTeamScore', 'decrement')
+                      }
+                    >
+                      <ArrowDown />
+                    </ScoreButton>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-4" id="score">
                 {!isLoading && confrontationDate && (
-                  <div className="flex items-center" id="away_team_score">
-                    <span className="text-4xl">{teamsScore.awayTeamScore}</span>
+                  <div className="flex items-center" id="home_team_score">
+                    <span className="text-4xl">{teamsScore.homeTeamScore}</span>
                   </div>
                 )}
 
                 <X size={20} color="#a9a9b2" className="mx-4" />
 
                 {!isLoading && confrontationDate && (
-                  <div className="flex items-center" id="home_team_score">
-                    <span className="text-4xl">{teamsScore.homeTeamScore}</span>
+                  <div className="flex items-center" id="away_team_score">
+                    <span className="text-4xl">{teamsScore.awayTeamScore}</span>
                   </div>
                 )}
               </div>
@@ -347,45 +308,37 @@ export default function Match() {
                   )}
                 </div>
 
-                {confrontationDate &&
-                  matchAlreadyStarted &&
-                  !confrontationAlreadyHappened && (
-                    <div className="flex flex-col justify-between">
-                      <button
-                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                        onClick={() =>
-                          handleChangeScoreTeam('awayTeamScore', 'increment')
-                        }
-                      >
-                        <ArrowUp />
-                      </button>
+                {showButtonChangeTeamScore && (
+                  <div className="flex flex-col justify-between">
+                    <ScoreButton
+                      onClick={() =>
+                        handleChangeScoreTeam('awayTeamScore', 'increment')
+                      }
+                    >
+                      <ArrowUp />
+                    </ScoreButton>
 
-                      <button
-                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                        onClick={() =>
-                          handleChangeScoreTeam('awayTeamScore', 'decrement')
-                        }
-                      >
-                        <ArrowDown />
-                      </button>
-                    </div>
-                  )}
+                    <ScoreButton
+                      onClick={() =>
+                        handleChangeScoreTeam('awayTeamScore', 'decrement')
+                      }
+                    >
+                      <ArrowDown />
+                    </ScoreButton>
+                  </div>
+                )}
               </div>
             </div>
 
-            {confrontationDate &&
-              matchAlreadyStarted &&
-              !confrontationAlreadyHappened && (
-                <Button
-                  type="button"
-                  onClick={() => mutateMatchEnd()}
-                  disabled={buttonMatchEnd}
-                >
-                  {mutationMatchEndLoading
-                    ? 'Encerrando...'
-                    : 'Encerrar partida'}
-                </Button>
-              )}
+            {showButtonMatchEnd && (
+              <Button
+                type="button"
+                onClick={() => mutateMatchEnd()}
+                disabled={buttonMatchEnd}
+              >
+                {mutationMatchEndLoading ? 'Encerrando...' : 'Encerrar partida'}
+              </Button>
+            )}
 
             {/* Players */}
             <div className="mt-6 border-t border-t-[#323238]">
