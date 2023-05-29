@@ -36,6 +36,9 @@ export function MatchCard({ match }: MatchCardProps) {
   const confrontationDate = dayjs(match.confrontationDate).tz(
     'America/Sao_Paulo',
   )
+
+  const isMatchDay = confrontationDate.isSame(dayjs(), 'day')
+
   const confrontationDateFormatted = confrontationDate.format('ddd, DD/MM')
 
   const hour = confrontationDate.hour()
@@ -115,7 +118,7 @@ export function MatchCard({ match }: MatchCardProps) {
             ) : (
               <>
                 <span className="text-xs text-[#a9a9b2] capitalize">
-                  {confrontationDateFormatted}
+                  {!isMatchDay ? confrontationDateFormatted : 'Hoje'}
                 </span>
                 <span className="text-xs text-[#a9a9b2]">
                   {confrontationMatchTime}
