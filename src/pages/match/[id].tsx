@@ -3,7 +3,13 @@ import { useRouter } from 'next/router'
 import { Button } from '@/components/Button'
 import { DatePicker } from '@/components/DatePicker'
 import { Input } from '@/components/Input'
-import { ArrowLeft, X, ArrowDown, ArrowUp } from '@phosphor-icons/react'
+import {
+  ArrowLeft,
+  X,
+  ArrowDown,
+  ArrowUp,
+  SoccerBall,
+} from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
 import {
   createConfrontationDateFormData,
@@ -156,13 +162,12 @@ export default function Match() {
 
   const awayTeamId = data?.confrontation.awayTeam.uuid
   const awayTeamName = data?.confrontation.awayTeam.name
+  const awayTeamImage = data?.confrontation.awayTeam.shield
 
   const homeTeamId = data?.confrontation.homeTeam.uuid
-
   const homeTeamName = data?.confrontation.homeTeam.name
-
-  const awayTeamImage = data?.confrontation.awayTeam.shield
   const homeTeamImage = data?.confrontation.homeTeam.shield
+
   const confrontationDate = data?.confrontation.confrontationDate ?? null
   const confrontationAlreadyHappened =
     data?.confrontation.confrontationAlreadyHappened
@@ -172,7 +177,6 @@ export default function Match() {
   )
 
   const today = dayjs()
-
   const matchAlreadyStarted = today.isAfter(confrontationDate)
 
   useEffect(() => {
@@ -248,74 +252,6 @@ export default function Match() {
 
           <div className="w-full mt-4 max-w-[600px] mx-auto flex flex-col gap-2">
             <div className="flex justify-between items-center">
-              <div className="flex gap-3" id="away_team">
-                <div className="flex flex-col items-center">
-                  {isLoading ? (
-                    <>
-                      <Skeleton height={48} width={48} circle />
-                      <Skeleton width={80} />
-                    </>
-                  ) : (
-                    <>
-                      <img
-                        className="w-12 h-12"
-                        src={awayTeamImage}
-                        alt={awayTeamName}
-                      />
-
-                      <Link
-                        href={`/team/${awayTeamId}`}
-                        className="hover:underline"
-                      >
-                        <span className="text-sm text-[#a9a9b2]">
-                          {awayTeamName}
-                        </span>
-                      </Link>
-                    </>
-                  )}
-                </div>
-
-                {confrontationDate &&
-                  matchAlreadyStarted &&
-                  !confrontationAlreadyHappened && (
-                    <div className="flex flex-col justify-between">
-                      <button
-                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                        onClick={() =>
-                          handleChangeScoreTeam('awayTeamScore', 'increment')
-                        }
-                      >
-                        <ArrowUp />
-                      </button>
-
-                      <button
-                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
-                        onClick={() =>
-                          handleChangeScoreTeam('awayTeamScore', 'decrement')
-                        }
-                      >
-                        <ArrowDown />
-                      </button>
-                    </div>
-                  )}
-              </div>
-
-              <div className="flex items-center gap-4" id="score">
-                {!isLoading && confrontationDate && (
-                  <div className="flex items-center" id="away_team_score">
-                    <span className="text-4xl">{teamsScore.awayTeamScore}</span>
-                  </div>
-                )}
-
-                <X size={20} color="#a9a9b2" className="mx-4" />
-
-                {!isLoading && confrontationDate && (
-                  <div className="flex items-center" id="home_team_score">
-                    <span className="text-4xl">{teamsScore.homeTeamScore}</span>
-                  </div>
-                )}
-              </div>
-
               <div className="flex gap-3" id="home_team">
                 <div className="flex flex-col items-center">
                   {isLoading ? (
@@ -367,10 +303,77 @@ export default function Match() {
                     </div>
                   )}
               </div>
+
+              <div className="flex items-center gap-4" id="score">
+                {!isLoading && confrontationDate && (
+                  <div className="flex items-center" id="away_team_score">
+                    <span className="text-4xl">{teamsScore.awayTeamScore}</span>
+                  </div>
+                )}
+
+                <X size={20} color="#a9a9b2" className="mx-4" />
+
+                {!isLoading && confrontationDate && (
+                  <div className="flex items-center" id="home_team_score">
+                    <span className="text-4xl">{teamsScore.homeTeamScore}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3" id="away_team">
+                <div className="flex flex-col items-center">
+                  {isLoading ? (
+                    <>
+                      <Skeleton height={48} width={48} circle />
+                      <Skeleton width={80} />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        className="w-12 h-12"
+                        src={awayTeamImage}
+                        alt={awayTeamName}
+                      />
+
+                      <Link
+                        href={`/team/${awayTeamId}`}
+                        className="hover:underline"
+                      >
+                        <span className="text-sm text-[#a9a9b2]">
+                          {awayTeamName}
+                        </span>
+                      </Link>
+                    </>
+                  )}
+                </div>
+
+                {confrontationDate &&
+                  matchAlreadyStarted &&
+                  !confrontationAlreadyHappened && (
+                    <div className="flex flex-col justify-between">
+                      <button
+                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                        onClick={() =>
+                          handleChangeScoreTeam('awayTeamScore', 'increment')
+                        }
+                      >
+                        <ArrowUp />
+                      </button>
+
+                      <button
+                        className="w-8 h-8 flex justify-center items-center hover:bg-[#323238] rounded-md"
+                        onClick={() =>
+                          handleChangeScoreTeam('awayTeamScore', 'decrement')
+                        }
+                      >
+                        <ArrowDown />
+                      </button>
+                    </div>
+                  )}
+              </div>
             </div>
 
-            {!isLoading &&
-              confrontationDate &&
+            {confrontationDate &&
               matchAlreadyStarted &&
               !confrontationAlreadyHappened && (
                 <Button
@@ -383,6 +386,43 @@ export default function Match() {
                     : 'Encerrar partida'}
                 </Button>
               )}
+
+            {/* Players */}
+            <div className="mt-6 border-t border-t-[#323238]">
+              <div className="pt-4 flex items-center justify-between">
+                <div id="players_team_home">
+                  <ul className="flex flex-col gap-1">
+                    {data?.confrontation.homeTeam.players.map((player) => {
+                      return (
+                        <div key={player.uuid}>
+                          <li className="text-xs text-[#a9a9b2]">
+                            {player.name}
+                          </li>
+                        </div>
+                      )
+                    })}
+                  </ul>
+                </div>
+
+                <div>
+                  <SoccerBall size={20} />
+                </div>
+
+                <div id="players_away_home">
+                  <ul className="flex flex-col gap-1">
+                    {data?.confrontation.awayTeam.players.map((player) => {
+                      return (
+                        <div key={player.uuid}>
+                          <li className="text-xs text-[#a9a9b2]">
+                            {player.name}
+                          </li>
+                        </div>
+                      )
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
 
           {!isLoading && !confrontationDate && (
@@ -402,6 +442,7 @@ export default function Match() {
                     <label className="text-[#E1E1E6] text-sm" htmlFor="hour">
                       Horas
                     </label>
+
                     <Input
                       id="hour"
                       type="text"

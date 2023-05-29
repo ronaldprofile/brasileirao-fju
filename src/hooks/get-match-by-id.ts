@@ -2,11 +2,19 @@ import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
 
+interface Player {
+  uuid: string
+  name: string
+}
+
 interface Team {
   uuid: string
   name: string
   acronym: string
   shield: string
+
+  players: Player[]
+  playersIds: string[]
 }
 
 interface Matche {
