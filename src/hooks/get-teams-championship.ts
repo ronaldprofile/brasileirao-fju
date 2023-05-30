@@ -3,6 +3,7 @@ import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
 
+export type LastRoundsStatus = 'win' | 'lose' | 'draw' | 'notHappened'
 interface Team {
   uuid: string
   name: string
@@ -10,6 +11,9 @@ interface Team {
   shield: string
 
   statistics: Statitic
+  statusLastRounds: Array<{
+    status: LastRoundsStatus
+  }>
 }
 
 interface GetTeamParams {

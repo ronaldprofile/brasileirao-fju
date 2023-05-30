@@ -3,6 +3,7 @@ import cx from 'clsx'
 import Link from 'next/link'
 import { TableLegend } from './TableLegend'
 import { Check, Minus, X } from '@phosphor-icons/react'
+import { LastRoundsStatus } from '@/hooks/get-teams-championship'
 
 interface Team {
   uuid: string
@@ -11,38 +12,15 @@ interface Team {
   shield: string
 
   statistics: Statitic
+  statusLastRounds: Array<{
+    status: LastRoundsStatus
+  }>
 }
 
 interface TableChampionshipProps {
   teams?: Team[]
   withLegend?: boolean
 }
-
-const teamLastFiveMatches = [
-  {
-    id: 1,
-    status: 'win',
-  },
-
-  {
-    id: 2,
-    status: 'win',
-  },
-
-  {
-    id: 3,
-    status: 'lose',
-  },
-  {
-    id: 4,
-    status: 'draw',
-  },
-
-  {
-    id: 4,
-    status: 'lose',
-  },
-]
 
 export function TableChampionship({
   teams,
@@ -83,6 +61,16 @@ export function TableChampionship({
 
             const topFour = teams.slice(0, 2).includes(team)
             const lastFour = teams.slice(-2).includes(team)
+
+            const orderStatusLastRounds = team.statusLastRounds.sort((a, b) => {
+              if (a.status === 'notHappened' && b.status !== 'notHappened') {
+                return -1
+              }
+              if (a.status !== 'notHappened' && b.status === 'notHappened') {
+                return 1
+              }
+              return 0
+            })
 
             return (
               <tr
@@ -137,14 +125,15 @@ export function TableChampionship({
 
                 <td className="pr-1 text-sm text-center text-[#A9A9B2]">
                   <div className="flex items-center justify-center gap-[2px]">
-                    {teamLastFiveMatches.map((match) => {
-                      const win = match.status === 'win'
-                      const lose = match.status === 'lose'
-                      const draw = match.status === 'draw'
+                    {orderStatusLastRounds.map(({ status }) => {
+                      const win = status === 'win'
+                      const lose = status === 'lose'
+                      const draw = status === 'draw'
+                      const notHappened = status === 'notHappened'
 
                       return (
                         <div
-                          key={match.id}
+                          key={status}
                           className={cx(
                             'w-4 h-4 flex items-center justify-center rounded-full',
                             {
@@ -158,8 +147,12 @@ export function TableChampionship({
                             <Check size={8} color={'#fff'} />
                           ) : lose ? (
                             <X size={8} color={'#fff'} />
-                          ) : (
+                          ) : draw ? (
                             <Minus size={8} color={'#fff'} />
+                          ) : (
+                            notHappened && (
+                              <div className="w-full h-full bg-gray-400 rounded-full" />
+                            )
                           )}
                         </div>
                       )
