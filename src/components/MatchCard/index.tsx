@@ -102,7 +102,7 @@ export function MatchCard({ match }: MatchCardProps) {
         </div>
       )}
 
-      <div className="max-w-[78px] w-full h-11 sm:h-full pt-3 pl-4 flex flex-col items-center justify-center border-l-[1.2px] border-l-[#323238] ">
+      <div className="w-32 h-11 sm:h-full pt-3 pl-4 flex flex-col items-center justify-center border-l-[1.2px] border-l-[#323238] ">
         {!match.confrontationDate ? (
           <span className="text-xs text-[#a9a9b2]">A confirmar</span>
         ) : (
