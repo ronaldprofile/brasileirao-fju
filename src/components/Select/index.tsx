@@ -3,7 +3,7 @@ import Select, { components, Props } from 'react-select'
 interface IOption {
   value: string
   label: string
-  image: string
+  image?: string
 }
 
 interface CustomSelectProps extends Props {
@@ -16,7 +16,9 @@ const Option = (props: any) => (
     className="bg-[#202024] hover:bg-[#323238] cursor-pointer"
   >
     <div className="flex items-center gap-3 text-[#a9a9b2]">
-      <img src={props.data.image} alt={props.data.label} className="w-6" />
+      {props.data.image && (
+        <img src={props.data.image} alt={props.data.label} className="w-6" />
+      )}
 
       <span className="text-sm">{props.data.label}</span>
     </div>
