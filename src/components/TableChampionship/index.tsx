@@ -139,7 +139,7 @@ export function TableChampionship({
                             {
                               'bg-green-500': win,
                               'bg-red-500': lose,
-                              'bg-gray-400': draw,
+                              'bg-blue-500': draw,
                             },
                           )}
                         >
@@ -151,7 +151,7 @@ export function TableChampionship({
                             <Minus size={8} color={'#fff'} />
                           ) : (
                             notHappened && (
-                              <div className="w-full h-full bg-gray-400 rounded-full" />
+                              <div className="w-full h-full bg-gray-500 rounded-full" />
                             )
                           )}
                         </div>

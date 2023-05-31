@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChampionshipLayout } from '@/components/ChampionshipLayout'
 import { MatchCard } from '@/components/MatchCard'
 import { useGetMatches } from '@/hooks/get-matches-championship'
@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight } from '@phosphor-icons/react'
 import Skeleton from 'react-loading-skeleton'
 import { MatchCardSkeleton } from '@/components/MatchCard/MatchSkeleton'
 import Link from 'next/link'
+import cx from 'clsx'
 
 const INITIAL_ROUND = { name: '', uuid: '' }
 
@@ -35,6 +36,14 @@ export default function Championship() {
     }
   }
 
+  useEffect(() => {
+    const currentRound = rounds.findIndex((round) => round.isCurrentRound)
+
+    console.log(currentRound)
+
+    setCurrentRound(currentRound)
+  }, [rounds])
+
   return (
     <div className="h-full w-full">
       <ChampionshipLayout>
@@ -50,7 +59,13 @@ export default function Championship() {
               <>
                 <button
                   onClick={handlePreviousRound}
-                  className="p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md"
+                  className={cx(
+                    'p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md',
+                    {
+                      'invisible opacity-0 pointer-events-none':
+                        currentRound === 0,
+                    },
+                  )}
                 >
                   <ArrowLeft size={20} />
 
@@ -65,7 +80,13 @@ export default function Championship() {
 
                 <button
                   onClick={handleNextRound}
-                  className="p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md"
+                  className={cx(
+                    'p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md',
+                    {
+                      'invisible opacity-0 pointer-events-none':
+                        currentRound === rounds.length - 1,
+                    },
+                  )}
                 >
                   <span className="hidden sm:block text-sm text-[#a9a9b2]">
                     Próxima rodada

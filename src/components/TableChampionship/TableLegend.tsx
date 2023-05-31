@@ -15,7 +15,7 @@ export function TableLegend() {
           </div>
 
           <div className="flex items-center gap-[3px] text-xs capitalize">
-            <div className="w-3 h-3 flex items-center justify-center rounded-full bg-gray-400">
+            <div className="w-3 h-3 flex items-center justify-center rounded-full bg-blue-500">
               <Minus size={8} color={'#fff'} />
             </div>
             <span className="text-[#a9a9b2]">Empate</span>

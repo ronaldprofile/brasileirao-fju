@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 interface Round {
   uuid: string
   name: string
+  isCurrentRound: boolean
 }
 
 async function getRoundsChampionship() {
