@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-interface TeamsScore {
+export interface TeamsScore {
   homeTeamScore: number
   awayTeamScore: number
 }

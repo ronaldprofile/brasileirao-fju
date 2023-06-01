@@ -13,61 +13,23 @@ import {
   createMatchScoreFormData,
 } from '@/schemas/match-score'
 import { toast } from 'react-toastify'
-
-interface Player {
-  uuid: string
-  name: string
-  shirtNumber: string
-  avatar: string
-  nickname: string
-  teamId: string
-  statisticId: string
-}
-
-interface Team {
-  uuid: string
-  name: string
-  acronym: string
-  shield: string
-
-  players: Player[]
-  playersIds: string[]
-}
-
-interface MatcheConfrontation {
-  uuid: string
-  confrontationDate: string | null
-
-  homeTeam: Team
-  awayTeam: Team
-
-  homeScore: number
-  awayScore: number
-
-  championshipId: string
-  roundId: string
-
-  matchEndsAt: string | null
-
-  confrontationAlreadyHappened: boolean
-}
+import { TeamsScore } from '@/hooks/use-score-teams'
+import { MatchConfrontation } from '@/hooks/get-match-by-id'
 
 interface ModalPlayersScoreMatchProps extends ModalProps {
-  matchConfrontation: MatcheConfrontation | undefined
   closeModal: () => void
 
-  handleSavePlayersScorers: (data: any) => void
-  homeTeamScoreState: number
-  awayTeamScoreState: number
+  teamsScores: TeamsScore
+  matchConfrontation: MatchConfrontation | undefined
+  handleSavePlayersScorers: (data: createMatchScoreFormData) => void
 }
 
 export function ModalPlayersScoreMatch({
   open,
   closeModal,
   matchConfrontation,
-  homeTeamScoreState,
-  awayTeamScoreState,
   handleSavePlayersScorers,
+  teamsScores,
 }: ModalPlayersScoreMatchProps) {
   const {
     register,
@@ -83,8 +45,10 @@ export function ModalPlayersScoreMatch({
 
   const { errors } = formState
 
-  const homeTeamGoalsScored = homeTeamScoreState
-  const awayTeamGoalsScored = awayTeamScoreState
+  const { awayTeamScore, homeTeamScore } = teamsScores
+
+  const homeTeamGoalsScored = homeTeamScore
+  const awayTeamGoalsScored = awayTeamScore
 
   async function handleMatchScore(data: createMatchScoreFormData) {
     const homeTeamGoalsScoredPlayers = data.homeTeam.reduce(

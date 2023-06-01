@@ -3,27 +3,32 @@ import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
 
-interface Player {
+export interface MatchPlayer {
   uuid: string
   name: string
+  shirtNumber: string
+  avatar: string
+  nickname: string
+  teamId: string
+  statisticId: string
 }
 
-interface Team {
+export interface MatchTeam {
   uuid: string
   name: string
   acronym: string
   shield: string
 
-  players: Player[]
+  players: MatchPlayer[]
   playersIds: string[]
 }
 
-interface Matche {
+export interface MatchConfrontation {
   uuid: string
   confrontationDate: string | null
 
-  homeTeam: Team
-  awayTeam: Team
+  homeTeam: MatchTeam
+  awayTeam: MatchTeam
 
   homeScore: number
   awayScore: number
@@ -41,7 +46,9 @@ async function getMatchById(uuid: string) {
 
   const url = `/confrontations/show/${uuid}`
 
-  const { data: confrontationInfo } = await api.post<{ data: Matche }>(url, {
+  const { data: confrontationInfo } = await api.post<{
+    data: MatchConfrontation
+  }>(url, {
     championshipId: id,
     roundId: '',
   })

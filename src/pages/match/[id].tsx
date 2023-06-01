@@ -30,10 +30,13 @@ import { toast } from 'react-toastify'
 import { useScoreTeams } from '@/hooks/use-score-teams'
 import { ScoreButton } from '@/components/ScoreButton'
 import { ModalPlayersScoreMatch } from '@/components/ModalPlayersScoreMatch'
+import { createMatchScoreFormData } from '@/schemas/match-score'
 
 interface PageQuery extends ParsedUrlQuery {
   id: string
 }
+
+type TeamsPLayersScorers = createMatchScoreFormData | null
 
 export default function Match() {
   const router = useRouter()
@@ -45,7 +48,8 @@ export default function Match() {
   const { teamsScore, handleChangeScoreTeam, handleUpdateScoreTeams } =
     useScoreTeams()
 
-  const [teamsPlayersScorers, setTeamsPlayersScorers] = useState<any>(null)
+  const [teamsPlayersScorers, setTeamsPlayersScorers] =
+    useState<TeamsPLayersScorers>(null)
 
   const [modalOpen, setModalOpen] = useState(false)
   const [buttonMatchEnd, setButtonMatchEnd] = useState(true)
@@ -129,7 +133,7 @@ export default function Match() {
     setDateCalendar(date)
   }
 
-  function handleSavePlayersScorers(data: any) {
+  function handleSavePlayersScorers(data: createMatchScoreFormData) {
     setTeamsPlayersScorers(data)
   }
 
@@ -489,10 +493,9 @@ export default function Match() {
       <ModalPlayersScoreMatch
         open={modalOpen}
         closeModal={closeModal}
-        handleSavePlayersScorers={handleSavePlayersScorers}
+        teamsScores={teamsScore}
         matchConfrontation={data?.confrontation}
-        homeTeamScoreState={teamsScore.homeTeamScore}
-        awayTeamScoreState={teamsScore.awayTeamScore}
+        handleSavePlayersScorers={handleSavePlayersScorers}
       />
     </div>
   )
