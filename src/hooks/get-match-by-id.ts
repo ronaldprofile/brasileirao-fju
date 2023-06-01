@@ -1,3 +1,4 @@
+import { MatchScorers } from '@/@types/match-scorers'
 import { api } from '@/lib/axios'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
 import { useQuery } from '@tanstack/react-query'
@@ -27,11 +28,11 @@ interface Matche {
   homeScore: number
   awayScore: number
 
+  scorers: MatchScorers
+
   championshipId: string
   roundId: string
-
   matchEndsAt: string | null
-
   confrontationAlreadyHappened: boolean
 }
 

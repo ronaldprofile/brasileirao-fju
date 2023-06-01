@@ -29,6 +29,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { useScoreTeams } from '@/hooks/use-score-teams'
 import { ScoreButton } from '@/components/ScoreButton'
+import { ModalPlayersScoreMatch } from '@/components/ModalPlayersScoreMatch'
 
 interface PageQuery extends ParsedUrlQuery {
   id: string
@@ -43,6 +44,10 @@ export default function Match() {
 
   const { teamsScore, handleChangeScoreTeam, handleUpdateScoreTeams } =
     useScoreTeams()
+
+  const [teamsPlayersScorers, setTeamsPlayersScorers] = useState<any>(null)
+
+  const [modalOpen, setModalOpen] = useState(false)
   const [buttonMatchEnd, setButtonMatchEnd] = useState(true)
 
   const queryClient = useQueryClient()
@@ -111,6 +116,10 @@ export default function Match() {
 
     await api.put(`/confrontations/update/${matchId}`, {
       championshipId: id,
+      scorers: {
+        ...teamsPlayersScorers,
+      },
+
       awayScore: awayTeamScore,
       homeScore: homeTeamScore,
     })
@@ -118,6 +127,18 @@ export default function Match() {
 
   function handleSelectDayCalendar(date: string) {
     setDateCalendar(date)
+  }
+
+  function handleSavePlayersScorers(data: any) {
+    setTeamsPlayersScorers(data)
+  }
+
+  function openModal() {
+    setModalOpen(true)
+  }
+
+  function closeModal() {
+    setModalOpen(false)
   }
 
   const awayTeamId = data?.confrontation.awayTeam.uuid
@@ -146,12 +167,12 @@ export default function Match() {
     confrontationDate && matchAlreadyStarted && !confrontationAlreadyHappened
 
   useEffect(() => {
-    if (!teamsScoreEmpty) {
+    if (!teamsScoreEmpty && teamsPlayersScorers) {
       setButtonMatchEnd(false)
     } else {
       setButtonMatchEnd(true)
     }
-  }, [teamsScoreEmpty])
+  }, [teamsScoreEmpty, teamsPlayersScorers])
 
   useEffect(() => {
     const newTeamsScore = {
@@ -340,42 +361,76 @@ export default function Match() {
               </Button>
             )}
 
-            {/* Players */}
-            <div className="mt-6 border-t border-t-[#323238]">
-              <div className="pt-4 flex items-center justify-between">
-                <div id="players_team_home">
-                  <ul className="flex flex-col gap-1">
-                    {data?.confrontation.homeTeam.players.map((player) => {
-                      return (
-                        <div key={player.uuid}>
-                          <li className="text-xs text-[#a9a9b2]">
-                            {player.name}
-                          </li>
-                        </div>
-                      )
-                    })}
-                  </ul>
-                </div>
+            {/* Players Scorers */}
+            {matchAlreadyStarted && confrontationAlreadyHappened && (
+              <div className="mt-6 border-t border-t-[#323238]">
+                <div className="pt-4 flex items-center justify-between">
+                  <div id="players_team_home">
+                    <ul className="flex flex-col gap-1">
+                      {data?.confrontation?.scorers?.homeTeam?.map(
+                        ({ player, score }) => {
+                          if (score > 0) {
+                            return (
+                              <div
+                                key={player.uuid}
+                                className="flex items-center gap-1"
+                              >
+                                <li className="text-xs text-[#a9a9b2]">
+                                  {player.name}
+                                </li>
 
-                <div>
-                  <SoccerBall size={20} />
-                </div>
+                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                  {score}
+                                </div>
+                              </div>
+                            )
+                          }
 
-                <div id="players_away_home">
-                  <ul className="flex flex-col gap-1">
-                    {data?.confrontation.awayTeam.players.map((player) => {
-                      return (
-                        <div key={player.uuid}>
-                          <li className="text-xs text-[#a9a9b2]">
-                            {player.name}
-                          </li>
-                        </div>
-                      )
-                    })}
-                  </ul>
+                          return <></>
+                        },
+                      )}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <SoccerBall size={20} />
+                  </div>
+
+                  <div id="players_away_home">
+                    <ul className="flex flex-col gap-1">
+                      {data?.confrontation?.scorers?.awayTeam?.map(
+                        ({ player, score }) => {
+                          if (score > 0) {
+                            return (
+                              <div
+                                key={player.uuid}
+                                className="flex items-center gap-1"
+                              >
+                                <li className="text-xs text-[#a9a9b2]">
+                                  {player.name}
+                                </li>
+
+                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                  {score}
+                                </div>
+                              </div>
+                            )
+                          }
+
+                          return <></>
+                        },
+                      )}
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {matchAlreadyStarted && !confrontationAlreadyHappened && (
+              <Button onClick={openModal} className="mt-4">
+                Adicionar marcadores
+              </Button>
+            )}
           </div>
 
           {!isLoading && !confrontationDate && (
@@ -430,6 +485,15 @@ export default function Match() {
           )}
         </div>
       </main>
+
+      <ModalPlayersScoreMatch
+        open={modalOpen}
+        closeModal={closeModal}
+        handleSavePlayersScorers={handleSavePlayersScorers}
+        matchConfrontation={data?.confrontation}
+        homeTeamScoreState={teamsScore.homeTeamScore}
+        awayTeamScoreState={teamsScore.awayTeamScore}
+      />
     </div>
   )
 }
