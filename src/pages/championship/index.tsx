@@ -39,8 +39,6 @@ export default function Championship() {
   useEffect(() => {
     const currentRound = rounds.findIndex((round) => round.isCurrentRound)
 
-    console.log(currentRound)
-
     setCurrentRound(currentRound)
   }, [rounds])
 

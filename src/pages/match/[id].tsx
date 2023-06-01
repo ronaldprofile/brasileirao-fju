@@ -372,26 +372,21 @@ export default function Match() {
                   <div id="players_team_home">
                     <ul className="flex flex-col gap-1">
                       {data?.confrontation?.scorers?.homeTeam?.map(
-                        ({ player, score }) => {
-                          if (score > 0) {
-                            return (
-                              <div
-                                key={player.uuid}
-                                className="flex items-center gap-1"
-                              >
-                                <li className="text-xs text-[#a9a9b2]">
-                                  {player.name}
-                                </li>
+                        ({ player, score }) =>
+                          score > 0 && (
+                            <div
+                              key={player.uuid}
+                              className="flex items-center gap-1"
+                            >
+                              <li className="text-xs text-[#a9a9b2]">
+                                {player.name}
+                              </li>
 
-                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
-                                  {score}
-                                </div>
+                              <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                {score}
                               </div>
-                            )
-                          }
-
-                          return <></>
-                        },
+                            </div>
+                          ),
                       )}
                     </ul>
                   </div>
@@ -403,26 +398,21 @@ export default function Match() {
                   <div id="players_away_home">
                     <ul className="flex flex-col gap-1">
                       {data?.confrontation?.scorers?.awayTeam?.map(
-                        ({ player, score }) => {
-                          if (score > 0) {
-                            return (
-                              <div
-                                key={player.uuid}
-                                className="flex items-center gap-1"
-                              >
-                                <li className="text-xs text-[#a9a9b2]">
-                                  {player.name}
-                                </li>
+                        ({ player, score }) =>
+                          score > 0 && (
+                            <div
+                              key={player.uuid}
+                              className="flex items-center gap-1"
+                            >
+                              <li className="text-xs text-[#a9a9b2]">
+                                {player.name}
+                              </li>
 
-                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
-                                  {score}
-                                </div>
+                              <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                {score}
                               </div>
-                            )
-                          }
-
-                          return <></>
-                        },
+                            </div>
+                          ),
                       )}
                     </ul>
                   </div>
@@ -458,6 +448,8 @@ export default function Match() {
                     <Input
                       id="hour"
                       type="text"
+                      minLength={2}
+                      maxLength={2}
                       error={errors.hour?.message}
                       {...register('hour')}
                       className="text-white appearance-none"
@@ -473,6 +465,8 @@ export default function Match() {
                     <Input
                       id="minutes"
                       type="text"
+                      minLength={2}
+                      maxLength={2}
                       error={errors.minute?.message}
                       {...register('minute')}
                       className="text-white appearance-none"

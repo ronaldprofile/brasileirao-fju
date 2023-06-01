@@ -44,7 +44,9 @@ export function MatchCard({ match }: MatchCardProps) {
   const hour = confrontationDate.hour()
   const minute = confrontationDate.minute()
 
-  const confrontationMatchTime = `${hour}:${minute}`
+  const minutesFormatted = String(minute).padStart(2, '0')
+
+  const confrontationMatchTime = `${hour}:${minutesFormatted}`
 
   const matchEndsAt = match.matchEndsAt
   const matchEndsAtFormatted = dayjs(matchEndsAt).format('ddd, DD/MM')
