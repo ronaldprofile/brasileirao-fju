@@ -25,12 +25,10 @@ export const matchScoreSchema = z.object({
   homeTeam: z.array(
     z.object({
       player: playerSchema,
-      score: z
-        .number({
-          invalid_type_error: 'Preencha este campo',
-          required_error: 'Preencha este campo',
-        })
-        .min(0),
+      score: z.number({
+        invalid_type_error: 'Preencha este campo',
+        required_error: 'Preencha este campo',
+      }),
     }),
   ),
 

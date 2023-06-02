@@ -65,12 +65,17 @@ export function ModalPlayersScoreMatch({
       0,
     )
 
-    if (
+    const playersGoalsGreaterThanTeamsGoals =
       homeTeamGoalsScoredPlayers > homeTeamGoalsScored! ||
       awayTeamGoalsScoredPlayers > awayTeamGoalsScored!
-    ) {
+
+    const playersGoalsLessThanTeamsGoals =
+      homeTeamGoalsScoredPlayers < homeTeamGoalsScored! ||
+      awayTeamGoalsScoredPlayers < awayTeamGoalsScored!
+
+    if (playersGoalsGreaterThanTeamsGoals || playersGoalsLessThanTeamsGoals) {
       toast.error(
-        'Total de gols dos jogadores não corresponde ao total de gols do time na partida',
+        'Gols dos jogadores não corresponde ao total de gols do time na partida',
       )
 
       return
@@ -112,13 +117,20 @@ export function ModalPlayersScoreMatch({
         <form onSubmit={handleSubmit(handleMatchScore)} className="mt-4">
           <div className="pt-4 flex flex-col justify-between">
             <div id="players_team_home">
-              <img
-                src={matchConfrontation?.homeTeam.shield}
-                alt=""
-                className="w-10"
-              />
+              <div className="flex items-center justify-between">
+                <img
+                  src={matchConfrontation?.homeTeam.shield}
+                  alt=""
+                  className="w-10"
+                />
 
-              <div className="mt-3 grid grid-cols-3 gap-1">
+                <p className="text-[#a9a9b2]">
+                  Gols na partida{' '}
+                  <span className="font-bold">{homeTeamGoalsScored}</span>
+                </p>
+              </div>
+
+              <div className="mt-6 grid grid-cols-3 gap-1">
                 {matchConfrontation?.homeTeam?.players.map((player, index) => {
                   const messageErrorScore =
                     errors.homeTeam && errors.homeTeam[index]?.score?.message
@@ -159,16 +171,23 @@ export function ModalPlayersScoreMatch({
               </div>
             </div>
 
-            <div className="my-4 border-t border-t-[#323238]"></div>
+            <div className="my-6 border-t border-t-[#323238]"></div>
 
             <div id="players_away_home">
-              <img
-                src={matchConfrontation?.awayTeam.shield}
-                alt=""
-                className="w-10"
-              />
+              <div className="flex items-center justify-between">
+                <img
+                  src={matchConfrontation?.awayTeam.shield}
+                  alt=""
+                  className="w-10"
+                />
 
-              <div className="mt-3 grid grid-cols-3 gap-1">
+                <p className="text-[#a9a9b2]">
+                  Gols na partida{' '}
+                  <span className="font-bold">{awayTeamGoalsScored}</span>
+                </p>
+              </div>
+
+              <div className="mt-6 grid grid-cols-3 gap-1">
                 {matchConfrontation?.awayTeam?.players.map((player, index) => {
                   const messageErrorScore =
                     errors.awayTeam && errors.awayTeam[index]?.score?.message

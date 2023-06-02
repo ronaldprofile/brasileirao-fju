@@ -38,6 +38,11 @@ interface PageQuery extends ParsedUrlQuery {
 
 type TeamsPLayersScorers = createMatchScoreFormData | null
 
+const TEAMS_PLAYERS_SCORERS_INITIAL_DATA: TeamsPLayersScorers = {
+  homeTeam: [],
+  awayTeam: [],
+}
+
 export default function Match() {
   const router = useRouter()
   const { id: matchId } = router.query as PageQuery
@@ -109,19 +114,18 @@ export default function Match() {
   }
 
   const { awayTeamScore, homeTeamScore } = teamsScore
-  const teamsScoreEmpty = awayTeamScore === 0 && homeTeamScore === 0
 
   async function handleMatchEnd() {
-    if (teamsScoreEmpty) {
-      return
-    }
-
     const id = getChampionshipIdCookie()
+
+    const scorers = !teamsPlayersScorers
+      ? TEAMS_PLAYERS_SCORERS_INITIAL_DATA
+      : teamsPlayersScorers
 
     await api.put(`/confrontations/update/${matchId}`, {
       championshipId: id,
       scorers: {
-        ...teamsPlayersScorers,
+        ...scorers,
       },
 
       awayScore: awayTeamScore,
@@ -170,13 +174,22 @@ export default function Match() {
   const showButtonChangeTeamScore =
     confrontationDate && matchAlreadyStarted && !confrontationAlreadyHappened
 
+  const teamsScoreIsZero = homeTeamScore + awayTeamScore === 0
+  const teamsScoreGreaterThanZero = homeTeamScore + awayTeamScore > 0
+
   useEffect(() => {
-    if (!teamsScoreEmpty && teamsPlayersScorers) {
+    if (teamsPlayersScorers || teamsScoreIsZero) {
       setButtonMatchEnd(false)
     } else {
       setButtonMatchEnd(true)
     }
-  }, [teamsScoreEmpty, teamsPlayersScorers])
+  }, [awayTeamScore, homeTeamScore, teamsPlayersScorers, teamsScoreIsZero])
+
+  useEffect(() => {
+    if (teamsScoreIsZero) {
+      setTeamsPlayersScorers(null)
+    }
+  }, [teamsScoreIsZero])
 
   useEffect(() => {
     const newTeamsScore = {
@@ -366,65 +379,70 @@ export default function Match() {
             )}
 
             {/* Players Scorers */}
-            {matchAlreadyStarted && confrontationAlreadyHappened && (
-              <div className="mt-6 border-t border-t-[#323238]">
-                <div className="pt-4 flex items-center justify-between">
-                  <div id="players_team_home">
-                    <ul className="flex flex-col gap-1">
-                      {data?.confrontation?.scorers?.homeTeam?.map(
-                        ({ player, score }) =>
-                          score > 0 && (
-                            <div
-                              key={player.uuid}
-                              className="flex items-center gap-1"
-                            >
-                              <li className="text-xs text-[#a9a9b2]">
-                                {player.name}
-                              </li>
+            {matchAlreadyStarted &&
+              confrontationAlreadyHappened &&
+              teamsScoreGreaterThanZero && (
+                <div className="mt-6 border-t border-t-[#323238]">
+                  <div className="pt-4 flex items-center justify-between">
+                    <div id="players_team_home">
+                      <ul className="flex flex-col gap-1">
+                        {data?.confrontation?.scorers?.homeTeam?.map(
+                          ({ player, score }) =>
+                            score > 0 && (
+                              <div
+                                key={player.uuid}
+                                className="flex items-center gap-1"
+                              >
+                                <li className="text-xs text-[#a9a9b2]">
+                                  {player.name}
+                                </li>
 
-                              <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
-                                {score}
+                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                  {score}
+                                </div>
                               </div>
-                            </div>
-                          ),
-                      )}
-                    </ul>
-                  </div>
+                            ),
+                        )}
+                      </ul>
+                    </div>
 
-                  <div>
-                    <SoccerBall size={20} />
-                  </div>
+                    <div>
+                      <SoccerBall size={20} />
+                    </div>
 
-                  <div id="players_away_home">
-                    <ul className="flex flex-col gap-1">
-                      {data?.confrontation?.scorers?.awayTeam?.map(
-                        ({ player, score }) =>
-                          score > 0 && (
-                            <div
-                              key={player.uuid}
-                              className="flex items-center gap-1"
-                            >
-                              <li className="text-xs text-[#a9a9b2]">
-                                {player.name}
-                              </li>
+                    <div id="players_away_home">
+                      <ul className="flex flex-col gap-1">
+                        {data?.confrontation?.scorers?.awayTeam?.map(
+                          ({ player, score }) =>
+                            score > 0 && (
+                              <div
+                                key={player.uuid}
+                                className="flex items-center gap-1"
+                              >
+                                <li className="text-xs text-[#a9a9b2]">
+                                  {player.name}
+                                </li>
 
-                              <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
-                                {score}
+                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                  {score}
+                                </div>
                               </div>
-                            </div>
-                          ),
-                      )}
-                    </ul>
+                            ),
+                        )}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {matchAlreadyStarted && !confrontationAlreadyHappened && (
-              <Button onClick={openModal} className="mt-4">
-                Adicionar marcadores
-              </Button>
-            )}
+            {teamsScoreIsZero ||
+              (teamsScoreGreaterThanZero &&
+                matchAlreadyStarted &&
+                !confrontationAlreadyHappened && (
+                  <Button onClick={openModal} className="mt-4 bg-blue-500">
+                    Adicionar marcadores
+                  </Button>
+                ))}
           </div>
 
           {!isLoading && !confrontationDate && (
