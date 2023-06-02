@@ -128,7 +128,7 @@ export function TableChampionship({
 
                 <td className="pr-1 text-sm text-center text-[#A9A9B2]">
                   <div className="flex items-center justify-center gap-[2px]">
-                    {orderStatusLastRounds.map(({ status }) => {
+                    {orderStatusLastRounds.map(({ status }, index) => {
                       const win = status === 'win'
                       const lose = status === 'lose'
                       const draw = status === 'draw'
@@ -136,7 +136,7 @@ export function TableChampionship({
 
                       return (
                         <div
-                          key={status}
+                          key={`${status}-${index}`}
                           className={cx(
                             'w-4 h-4 flex items-center justify-center rounded-full',
                             {
