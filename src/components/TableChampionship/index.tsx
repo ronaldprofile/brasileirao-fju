@@ -62,18 +62,20 @@ export function TableChampionship({
             const topFour = teams.slice(0, 2).includes(team)
             const lastFour = teams.slice(-2).includes(team)
 
-            const removeLastItem = team.statusLastRounds.pop()
-            team.statusLastRounds.splice(3, 0, removeLastItem!)
+            // const removeLastItem = team.statusLastRounds.pop()
+            // team.statusLastRounds.splice(3, 0, removeLastItem!)
 
             const orderStatusLastRounds = team.statusLastRounds.sort((a, b) => {
               if (a.status === 'notHappened' && b.status !== 'notHappened') {
-                return -1
+                return 1
               }
               if (a.status !== 'notHappened' && b.status === 'notHappened') {
-                return 1
+                return -1
               }
               return 0
             })
+
+            console.log(orderStatusLastRounds)
 
             return (
               <tr
