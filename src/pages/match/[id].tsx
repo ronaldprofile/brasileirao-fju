@@ -178,12 +178,12 @@ export default function Match() {
   const teamsScoreGreaterThanZero = homeTeamScore + awayTeamScore > 0
 
   const awayTeamMatchPlayersScore =
-    data?.confrontation.scorers.awayTeam?.reduce((acc, item) => {
+    data?.confrontation.scorers?.awayTeam?.reduce((acc, item) => {
       return acc + item.score
     }, 0)
 
   const homeTeamMatchPlayersScore =
-    data?.confrontation.scorers.homeTeam?.reduce((acc, item) => {
+    data?.confrontation.scorers?.homeTeam?.reduce((acc, item) => {
       return acc + item.score
     }, 0)
 
