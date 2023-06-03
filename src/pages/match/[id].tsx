@@ -177,6 +177,16 @@ export default function Match() {
   const teamsScoreIsZero = homeTeamScore + awayTeamScore === 0
   const teamsScoreGreaterThanZero = homeTeamScore + awayTeamScore > 0
 
+  const awayTeamMatchPlayersScore =
+    data?.confrontation.scorers.awayTeam?.reduce((acc, item) => {
+      return acc + item.score
+    }, 0)
+
+  const homeTeamMatchPlayersScore =
+    data?.confrontation.scorers.homeTeam?.reduce((acc, item) => {
+      return acc + item.score
+    }, 0)
+
   useEffect(() => {
     if (teamsPlayersScorers || teamsScoreIsZero) {
       setButtonMatchEnd(false)
@@ -253,9 +263,9 @@ export default function Match() {
             </div>
           </div>
 
-          <div className="w-full mt-4 max-w-[600px] mx-auto flex flex-col gap-2">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-3" id="home_team">
+          <div className="w-full mt-8 max-w-[600px] mx-auto flex flex-col gap-2">
+            <div className="grid grid-cols-3 justify-between">
+              <div className="flex justify-start gap-3" id="home_team">
                 <div className="flex flex-col items-center">
                   {isLoading ? (
                     <>
@@ -303,7 +313,10 @@ export default function Match() {
                 )}
               </div>
 
-              <div className="flex items-center gap-4" id="score">
+              <div
+                className="flex items-center justify-center gap-4"
+                id="score"
+              >
                 {!isLoading && confrontationDate && (
                   <div className="flex items-center" id="home_team_score">
                     <span className="text-4xl">{teamsScore.homeTeamScore}</span>
@@ -319,7 +332,7 @@ export default function Match() {
                 )}
               </div>
 
-              <div className="flex gap-3" id="away_team">
+              <div className="flex justify-end gap-3" id="away_team">
                 <div className="flex flex-col items-center">
                   {isLoading ? (
                     <>
@@ -383,54 +396,62 @@ export default function Match() {
               confrontationAlreadyHappened &&
               teamsScoreGreaterThanZero && (
                 <div className="mt-6 border-t border-t-[#323238]">
-                  <div className="pt-4 flex items-center justify-between">
-                    <div id="players_team_home">
-                      <ul className="flex flex-col gap-1">
-                        {data?.confrontation?.scorers?.homeTeam?.map(
-                          ({ player, score }) =>
-                            score > 0 && (
-                              <div
-                                key={player.uuid}
-                                className="flex items-center gap-1"
-                              >
-                                <li className="text-xs text-[#a9a9b2]">
-                                  {player.name}
-                                </li>
+                  <div className="pt-4 grid grid-cols-3">
+                    {homeTeamMatchPlayersScore !== 0 ? (
+                      <div id="players_team_home">
+                        <ul className="flex flex-col gap-1">
+                          {data?.confrontation?.scorers?.homeTeam?.map(
+                            ({ player, score }) =>
+                              score > 0 && (
+                                <div
+                                  key={player.uuid}
+                                  className="flex items-center justify-start gap-1"
+                                >
+                                  <li className="text-xs text-[#a9a9b2]">
+                                    {player.name}
+                                  </li>
 
-                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
-                                  {score}
+                                  <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                    {score}
+                                  </div>
                                 </div>
-                              </div>
-                            ),
-                        )}
-                      </ul>
-                    </div>
+                              ),
+                          )}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
 
-                    <div>
+                    <div className="flex justify-center items-center">
                       <SoccerBall size={20} />
                     </div>
 
-                    <div id="players_away_home">
-                      <ul className="flex flex-col gap-1">
-                        {data?.confrontation?.scorers?.awayTeam?.map(
-                          ({ player, score }) =>
-                            score > 0 && (
-                              <div
-                                key={player.uuid}
-                                className="flex items-center gap-1"
-                              >
-                                <li className="text-xs text-[#a9a9b2]">
-                                  {player.name}
-                                </li>
+                    {awayTeamMatchPlayersScore !== 0 ? (
+                      <div id="players_away_home">
+                        <ul className="flex flex-col gap-1">
+                          {data?.confrontation?.scorers?.awayTeam?.map(
+                            ({ player, score }) =>
+                              score > 0 && (
+                                <div
+                                  key={player.uuid}
+                                  className="flex items-center justify-end gap-1"
+                                >
+                                  <li className="text-xs text-[#a9a9b2]">
+                                    {player.name}
+                                  </li>
 
-                                <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
-                                  {score}
+                                  <div className="w-4 h-4 text-[10px] flex justify-center items-center rounded-full bg-[#323238]">
+                                    {score}
+                                  </div>
                                 </div>
-                              </div>
-                            ),
-                        )}
-                      </ul>
-                    </div>
+                              ),
+                          )}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                 </div>
               )}
