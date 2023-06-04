@@ -27,7 +27,7 @@ export default function Classification() {
         )}
       </div>
 
-      <div className="mt-2 bg-[#202024]">
+      <div className="w-full mt-2 bg-[#202024]">
         {isLoading && <TableSkeleton count={teamsTotal} />}
 
         {!isLoading && !teamsIsEmpty && (

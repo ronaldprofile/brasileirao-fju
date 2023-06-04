@@ -22,9 +22,7 @@ export function ChampionshipLayout({ children }: ChampionshipLayoutProps) {
       </div>
 
       <main className="mt-32">
-        <div className="w-full max-w-3xl h-12 mx-auto px-6 lg:px-0">
-          {children}
-        </div>
+        <div className="w-full max-w-3xl h-12 mx-auto">{children}</div>
       </main>
     </div>
   )

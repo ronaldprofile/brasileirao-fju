@@ -2,8 +2,8 @@ import { Check, Minus, X } from '@phosphor-icons/react'
 
 export function TableLegend() {
   return (
-    <div className="bg-[#323238] mt-3 mx-2 rounded-md">
-      <div className="p-4">
+    <div className="bg-[#323238] w-full mt-4">
+      <div className="pl-4 pt-4 pb-4 w-full">
         <p className="text-xs mb-1 text-[#a9a9b2]">Últimas 5 partidas</p>
 
         <div className="flex flex-col gap-[2px]">
