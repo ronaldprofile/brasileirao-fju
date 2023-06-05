@@ -3,7 +3,7 @@ import cx from 'clsx'
 
 import styles from './styles.module.css'
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string
 }
 
