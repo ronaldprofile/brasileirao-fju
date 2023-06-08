@@ -12,7 +12,7 @@ import {
   createTeamFormData,
   createTeamFormDataInputs,
   createTeamFormSchema,
-} from '@/schemas/team'
+} from '@/schemas/create/team'
 import { api } from '@/lib/axios'
 import { toast } from 'react-toastify'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
@@ -22,9 +22,6 @@ export function Steps() {
 
   const createTeamForm = useForm<createTeamFormData>({
     resolver: zodResolver(createTeamFormSchema),
-    defaultValues: {
-      playersIds: [],
-    },
   })
 
   const { handleSubmit, reset } = createTeamForm

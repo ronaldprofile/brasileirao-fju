@@ -6,7 +6,8 @@ import { Input } from '@/components/Input'
 import { useForm, useFormContext } from 'react-hook-form'
 import { api } from '@/lib/axios'
 import cx from 'clsx'
-import { createTeamFormData } from '@/schemas/team'
+import { createTeamFormData } from '@/schemas/create/team'
+import { toast } from 'react-toastify'
 
 interface StepPlayersProps {
   handleNextStepForm: () => void
@@ -56,10 +57,16 @@ export function StepPlayers({ handleNextStepForm }: StepPlayersProps) {
 
       const searchResults = response.data
 
-      setPlayers(searchResults.data)
+      if (searchResults.data.length === 0) {
+        toast.error('Nenhum jogador encontrado')
+      } else {
+        setPlayers(searchResults.data)
+      }
+
       reset()
     } catch (error) {
       console.log(error)
+      toast.error('Erro no servidor')
     }
   }
 
@@ -164,7 +171,8 @@ export function StepPlayers({ handleNextStepForm }: StepPlayersProps) {
                   <img
                     src={player.avatar}
                     alt={player.name}
-                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-full"
+                    loading="lazy"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover"
                   />
 
                   <span className="text-[#a9a9b2] text-sm">{player.name}</span>

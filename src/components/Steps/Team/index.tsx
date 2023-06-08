@@ -2,7 +2,7 @@ import { FormBox } from '@/components/FormBox'
 import { Input } from '@/components/Input'
 import { ButtonNextStep } from '../ButtonNextStep'
 import { useFormContext } from 'react-hook-form'
-import { createTeamFormData } from '@/schemas/team'
+import { createTeamFormData } from '@/schemas/create/team'
 
 interface StepTeamProps {
   handleNextStepForm: () => void

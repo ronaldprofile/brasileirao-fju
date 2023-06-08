@@ -2,7 +2,7 @@ import { FileImage } from '@phosphor-icons/react'
 import { Input } from '../Input'
 
 import { useFormContext } from 'react-hook-form'
-import { createTeamFormData } from '@/schemas/team'
+import { createTeamFormData } from '@/schemas/create/team'
 import { ViewPhotoPreview } from '../ViewPhotoPreview'
 
 interface AreaUploadFileProps {

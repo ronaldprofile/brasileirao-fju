@@ -20,11 +20,11 @@ export const createTeamFormSchema = z.object({
     .any()
     .refine((files) => !!files.item(0), 'A logo do time é obrigatória')
     .refine(
-      (files) => files.item(0)?.size <= MAX_FILE_SIZE,
+      (files) => files.item(0)!.size <= MAX_FILE_SIZE,
       'Arquivo deve ter no máximo de 5MB',
     )
     .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files.item(0)?.type),
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files.item(0)!.type),
       'Formato de imagem inválido',
     )
     .transform((files) => {

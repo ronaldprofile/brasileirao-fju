@@ -24,6 +24,8 @@ export default function Championship() {
   const { data, isLoading: isLoadingMatches } = useGetMatches(round?.uuid)
   const matchesTotal = data?.matches.length ?? 4
 
+  const roundsIsEmpty = rounds.length === 0
+
   function handleNextRound() {
     if (currentRound < roundsTotal - 1) {
       setCurrentRound((prevState) => prevState + 1)
@@ -55,49 +57,57 @@ export default function Championship() {
               </>
             ) : (
               <>
-                <button
-                  onClick={handlePreviousRound}
-                  className={cx(
-                    'p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md',
-                    {
-                      'invisible opacity-0 pointer-events-none':
-                        currentRound === 0,
-                    },
-                  )}
-                >
-                  <ArrowLeft size={20} />
-
-                  <span className="hidden sm:block text-sm text-[#a9a9b2]">
-                    Rodada anterior
+                {roundsIsEmpty ? (
+                  <span className="text-sm text-[#a9a9b2]">
+                    Rodadas ainda não foram sorteadas
                   </span>
-                </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={handlePreviousRound}
+                      className={cx(
+                        'p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md',
+                        {
+                          'invisible opacity-0 pointer-events-none':
+                            currentRound === 0,
+                        },
+                      )}
+                    >
+                      <ArrowLeft size={20} />
 
-                <span className="text-sm text-[#A9A9B2]">
-                  {round.name} de {roundsTotal}
-                </span>
+                      <span className="hidden sm:block text-sm text-[#a9a9b2]">
+                        Rodada anterior
+                      </span>
+                    </button>
 
-                <button
-                  onClick={handleNextRound}
-                  className={cx(
-                    'p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md',
-                    {
-                      'invisible opacity-0 pointer-events-none':
-                        currentRound === rounds.length - 1,
-                    },
-                  )}
-                >
-                  <span className="hidden sm:block text-sm text-[#a9a9b2]">
-                    Próxima rodada
-                  </span>
-                  <ArrowRight size={20} />
-                </button>
+                    <span className="text-sm text-[#A9A9B2]">
+                      {round.name} de {roundsTotal}
+                    </span>
+
+                    <button
+                      onClick={handleNextRound}
+                      className={cx(
+                        'p-2 hover:border-none hover:bg-[#323238] transition-all flex items-center gap-2 border border-[#323338] rounded-md',
+                        {
+                          'invisible opacity-0 pointer-events-none':
+                            currentRound === rounds.length - 1,
+                        },
+                      )}
+                    >
+                      <span className="hidden sm:block text-sm text-[#a9a9b2]">
+                        Próxima rodada
+                      </span>
+                      <ArrowRight size={20} />
+                    </button>
+                  </>
+                )}
               </>
             )}
           </div>
 
           <div className="mt-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-              {isLoadingMatches ? (
+              {isLoadingMatches && !roundsIsEmpty ? (
                 <>
                   {Array.from({ length: matchesTotal }).map((_, index) => {
                     return <MatchCardSkeleton key={index} />

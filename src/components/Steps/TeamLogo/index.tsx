@@ -2,7 +2,7 @@ import { FormBox } from '@/components/FormBox'
 import { AreaUploadFile } from '@/components/AreaUploadFile'
 import { Button } from '@/components/Button'
 import { useFormContext } from 'react-hook-form'
-import { createTeamFormData } from '@/schemas/team'
+import { createTeamFormData } from '@/schemas/create/team'
 
 export function StepTeamLogo() {
   const {

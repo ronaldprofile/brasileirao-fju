@@ -22,8 +22,8 @@ export const createPlayerFormSchema = z.object({
   surname: z.string().nonempty('Apelido é obrigatório'),
   shirt: z.string().nonempty('Número da camisa é obrigatório'),
   avatar: z
-    // .instanceof(FileList)
     .any()
+    // .instanceof(FileList)
     .refine((files) => !!files.item(0), 'A imagem de perfil é obrigatória')
     .refine(
       (files) => files.item(0)?.size <= MAX_FILE_SIZE,
@@ -34,7 +34,7 @@ export const createPlayerFormSchema = z.object({
       'Formato de imagem inválido',
     )
     .transform((files) => {
-      return files.item(0)
+      return files.item(0) as FileList
     }),
 })
 
