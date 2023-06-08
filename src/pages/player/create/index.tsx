@@ -13,7 +13,7 @@ import {
   createPlayerFormSchema,
   createPlayerFormData,
   createPlayerFormDataInputs,
-} from '@/schemas/player'
+} from '@/schemas/create/player'
 
 import { ViewPhotoPreview } from '@/components/ViewPhotoPreview'
 import { getChampionshipIdCookie } from '@/utils/get-championship-id-cookie'
